@@ -1,0 +1,3 @@
+/Users/piotrbaranowski/Desktop/Software projects/SFML/Graphics playground/build/CMakeFiles/program.dir
+/Users/piotrbaranowski/Desktop/Software projects/SFML/Graphics playground/build/CMakeFiles/edit_cache.dir
+/Users/piotrbaranowski/Desktop/Software projects/SFML/Graphics playground/build/CMakeFiles/rebuild_cache.dir
