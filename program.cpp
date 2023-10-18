@@ -27,14 +27,16 @@ ostream& operator <<(ostream& os, const Vertex& v)
 RenderWindow window;
 
 
-
-
 class Render
 {
 public: 
-    vector<Point> allVertexes;
-    vector<Segment> allSegments;
-    Render() : allVertexes(vector<Point>()), allSegments(vector<Segment>()) {}
+    // vector<Point> allVertexes;
+    // vector<Segment> allSegments;
+    // Render() : allVertexes(vector<Point>()), allSegments(vector<Segment>()) {}
+
+    vector<Polygon*> polygons;
+
+    Render() : polygons(vector<Polygon*>()) {}
 
     void drawPoint(const Point& p)
     {
@@ -73,41 +75,51 @@ public:
 
     void draw()
     {
-        for(auto& seg: allSegments)
+        for(auto& polygon: polygons)
+        {
+            for(auto& seg: polygon->segments)
             drawSegment(seg);
-        for(auto& p: allVertexes)
+
+            for(auto& p: polygon->vertexes)
             drawCircle(p);
+        }
     }
 
-    void addVertex(const Point& p)
+    void addPolygon(Polygon* polygon)
     {
-        allVertexes.push_back({p.x, p.y});
+        polygons.push_back(polygon);
     }
 
-    void addSegment(const Point& b, const Point& e)
-    {
-        Segment seg({b.x, b.y}, {e.x, e.y});
-        // allSegments.push_back(({b.x, b.y}, {e.x, e.y})); ?? why
-        allSegments.push_back(seg);
-    }
+    // void addVertex(const Point& p)
+    // {
+    //     allVertexes.push_back({p.x, p.y});
+    // }
+
+    // void addSegment(const Point& b, const Point& e)
+    // {
+    //     Segment seg({b.x, b.y}, {e.x, e.y});
+    //     // allSegments.push_back(({b.x, b.y}, {e.x, e.y})); ?? why
+    //     allSegments.push_back(seg);
+    // }
 };
 
 int main()
 {
     window.create(sf::VideoMode(1152, 720), "Polygon editor");
+    window.display();
     Render render;
     
     // int M = 1152, N = 720;
-    Vertex nodes[20];
-    int n;
+    // Vertex nodes[20];
+    // int n;
 
-    bool segmentOn = false;
+    // bool segmentOn = false;
     bool polygonStarted = false;
     Polygon* polygon;
     Point* prevPoint;
-    Point* startPoint;
+    // Point* startPoint;
 
-    window.display();
+    // window.display() DELETED HERE !!!
     while (window.isOpen())
     {
         Event event;
@@ -120,34 +132,41 @@ int main()
             if(event.type == Event::MouseButtonPressed)
             {
                 Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
+
                 if(!polygonStarted)
                 {
                     // cout << "hello" << endl;
                     // cout << window.getSize().x << " " << window.getSize().y << endl;
+                    polygon = new Polygon(cursorPoint);
+                    render.addPolygon(polygon);
                     polygonStarted = true;
                     
                     prevPoint = new Point(cursorPoint.x, cursorPoint.y);
-                    startPoint = new Point(cursorPoint.x, cursorPoint.y);
-                    render.addVertex(cursorPoint);
+                    // startPoint = new Point(cursorPoint.x, cursorPoint.y);
+                    // render.addVertex(cursorPoint);
 
                     // polygon(cursorPoint);
-                    polygon = new Polygon(cursorPoint);
+                    
                     cout << "cordy: " << cursorPoint.x << " " << cursorPoint.y << endl;
                 }
                 else
                 {
-                    render.addSegment(*prevPoint, cursorPoint);
+                    // render.addSegment(*prevPoint, cursorPoint);
+                    polygon->addSegment(*prevPoint, cursorPoint);
                     delete prevPoint;
-                    prevPoint = new Point(cursorPoint.x, cursorPoint.y);
-                    
-
-                    if(startPoint->pointInCircle(cursorPoint))
+                
+                    if(polygon->start.pointInCircle(cursorPoint))
                     {
                         polygonStarted = false;
-                        render.allVertexes.pop_back();
+                        // render.allVertexes.pop_back();
+                        polygon->popVertex();
                     }
                     else
-                        render.addVertex(cursorPoint);
+                    {
+                        // render.addVertex(cursorPoint);
+                        polygon->addVertex(cursorPoint);
+                        prevPoint = new Point(cursorPoint.x, cursorPoint.y);
+                    }
                 }
             }
         }
@@ -157,17 +176,31 @@ int main()
             Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));;
             cout << "cordy2: " << cursorPoint.x << " " << cursorPoint.y << endl;
 
-            if(render.allVertexes.size() > 1)
-                render.allVertexes.pop_back();
-            if(render.allSegments.size() > 0)
-                render.allSegments.pop_back();
+            // if(render.allVertexes.size() > 1)
+            //     render.allVertexes.pop_back();
+            // if(render.allSegments.size() > 0)
+            //     render.allSegments.pop_back();
 
-            render.addVertex(cursorPoint);
-            render.addSegment(*prevPoint, cursorPoint);
+            if(polygon->vertexes.size() > 1)
+                polygon->popVertex();
+            if(polygon->segments.size() > 0)
+                polygon->popSegment();
+
+            // render.addVertex(cursorPoint);
+            // render.addSegment(*prevPoint, cursorPoint);
+
+            polygon->addVertex(cursorPoint);
+            polygon->addSegment(*prevPoint, cursorPoint);
         }
         else
         {
-            cout << "yeahh " << render.allVertexes.size() <<  endl;
+            cout << "yeahh "; //polygon->vertexes.size() <<  endl;
+            if(polygon != nullptr)
+            {
+                cout << polygon->vertexes.size() << " " << polygon->segments.size() << endl;
+            }
+            else
+                cout << endl;
         }
        
         window.clear();
