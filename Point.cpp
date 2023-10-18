@@ -1,8 +1,11 @@
 #pragma once
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include "global.hpp"
 using namespace std;
 using namespace sf;
+
 
 class Point
 {
@@ -35,6 +38,16 @@ public:
         return Point(x / norm(), y / norm());
     }
 
+    friend Point dtc(const Point& p)
+    {
+        return Point(p.x, N - p.y);
+    }
+
+    friend Point ctd(const Point& p)
+    {
+        return Point(p.x, N - p.y);
+    }
+
     friend ostream& operator <<(ostream& os, const Point& p)
     {
         return os << p.x << ' ' << p.y;
@@ -44,4 +57,28 @@ public:
     {
         return Point(x*len, y*len);
     }
+
+    // void drawPoint()
+    // {
+    //     Vertex v(Vector2f(ctd(*this).x, ctd(*this).y));
+    //     Vertex vA[] = {v};
+    //     window.draw(vA, 1, Points);
+    //     cout << "hello even here" << endl;
+    // }
+
+    void drawCircle()
+    {
+        CircleShape circle(radius);
+        circle.setPosition(Vector2f(ctd(*this).x-radius, ctd(*this).y-radius));
+        window.draw(circle);
+    }
+};
+
+class Segment
+{
+public:
+    Point b, e;
+
+    Segment(const Point& b, const Point& e) : b(b.x, b.y), e(e.x, e.y)
+    {}
 };

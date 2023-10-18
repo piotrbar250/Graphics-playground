@@ -1,0 +1,95 @@
+global.hpp:
+#pragma once
+
+#include <SFML/Graphics.hpp>
+#include <cmath>
+using namespace std;
+using namespace sf;
+
+const int M = 1152, N = 720;
+extern RenderWindow window;
+
+Polygon.cpp:
+#pragma once
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <cmath>
+#include "Point.cpp"
+#include "global.hpp"
+using namespace std;
+using namespace sf;
+
+class Polygon
+{
+public:
+    RenderWindow window;
+    vector<Point> vertices;
+    Point start;
+    
+    Polygon() {}
+
+    Polygon(Point& p) : start(p.x, p.y)
+    {
+        vertices.push_back(Point(p.x, p.y)); // is it needed?
+        cout << "hello here" << endl;
+        cout << window.getSize().x << " " << window.getSize().y << endl; // prints 0 0
+        p.draw(window);
+        
+    }
+
+    void addVertex(Point & p)
+    {
+        vertices.push_back(Point(p.x, p.y));
+        p.draw(window);
+    }
+};
+
+program.cpp:
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <cmath>
+#include "Line.cpp"
+#include "Polygon.cpp"
+#include "global.hpp"
+
+using namespace std;
+using namespace sf;
+
+
+int main()
+{
+    RenderWindow window(sf::VideoMode(1152, 720), "Polygon editor");
+    // int M = 1152, N = 720;
+    Vertex nodes[20];
+    int n;
+
+    bool segmentOn = false;
+    bool polygonStarted = false;
+    Polygon* polygon;
+
+    while (window.isOpen())
+    {
+        Event event;
+
+        while (window.pollEvent(event))
+        {
+            if(event.type == Event::Closed)
+                window.close();
+            if(event.type == Event::MouseButtonPressed)
+            {
+                if(!polygonStarted)
+                {
+                    cout << "hello" << endl;
+                    cout << window.getSize().x << " " << window.getSize().y << endl;
+                    polygonStarted = true;
+                    Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
+                    // polygon(cursorPoint);
+                    polygon = new Polygon(cursorPoint);
+                    // window.draw()
+                }
+            }
+        }
+        window.display();
+    }
+...
+}

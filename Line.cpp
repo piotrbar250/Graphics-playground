@@ -4,8 +4,6 @@
 using namespace std;
 using namespace sf;
 
-const int M = 1152, N = 720;
-
 class Line
 {
 public:
