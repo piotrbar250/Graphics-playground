@@ -31,8 +31,7 @@ RenderWindow window;
 
 class Render
 {
-public:
-    
+public: 
     vector<Point> allVertexes;
     vector<Segment> allSegments;
     Render() : allVertexes(vector<Point>()), allSegments(vector<Segment>()) {}
@@ -47,20 +46,37 @@ public:
 
     void drawSegment(const Segment& seg)
     {
+        float x1 = seg.b.x;
+        float y1 = seg.b.y;
 
+        float x2 = seg.e.x;
+        float y2 = seg.e.y;
+
+        float len = sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+        float angle_rad = atan2(y1-y2, x2-x1);
+        float angle_deg = angle_rad * 180 / M_PI;
+
+        RectangleShape rect(Vector2f(len, 5));
+        rect.setPosition(Vector2f(ctd(seg.b).x, ctd(seg.b).y));
+        rect.rotate(angle_deg);
+        rect.setFillColor(Color::Green);
+        window.draw(rect);
     }
     
     void drawCircle(const Point& p)
     {
         CircleShape circle(radius);
+        // circle.setPosition(Vector2f(ctd(p).x-radius/2, ctd(p).y-radius/2));
         circle.setPosition(Vector2f(ctd(p).x-radius, ctd(p).y-radius));
         window.draw(circle);
     }
 
     void draw()
     {
-        // for(auto v: allVertexes)
-        //     draw(allVer)
+        for(auto& seg: allSegments)
+            drawSegment(seg);
+        for(auto& p: allVertexes)
+            drawCircle(p);
     }
 
     void addVertex(const Point& p)
@@ -89,6 +105,7 @@ int main()
     bool polygonStarted = false;
     Polygon* polygon;
     Point* prevPoint;
+    Point* startPoint;
 
     window.display();
     while (window.isOpen())
@@ -102,21 +119,61 @@ int main()
                 window.close();
             if(event.type == Event::MouseButtonPressed)
             {
+                Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
                 if(!polygonStarted)
                 {
-                    cout << "hello" << endl;
-                    cout << window.getSize().x << " " << window.getSize().y << endl;
+                    // cout << "hello" << endl;
+                    // cout << window.getSize().x << " " << window.getSize().y << endl;
                     polygonStarted = true;
-                    Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
+                    
+                    prevPoint = new Point(cursorPoint.x, cursorPoint.y);
+                    startPoint = new Point(cursorPoint.x, cursorPoint.y);
+                    render.addVertex(cursorPoint);
+
                     // polygon(cursorPoint);
                     polygon = new Polygon(cursorPoint);
                     cout << "cordy: " << cursorPoint.x << " " << cursorPoint.y << endl;
                 }
+                else
+                {
+                    render.addSegment(*prevPoint, cursorPoint);
+                    delete prevPoint;
+                    prevPoint = new Point(cursorPoint.x, cursorPoint.y);
+                    
+
+                    if(startPoint->pointInCircle(cursorPoint))
+                    {
+                        polygonStarted = false;
+                        render.allVertexes.pop_back();
+                    }
+                    else
+                        render.addVertex(cursorPoint);
+                }
             }
+        }
+
+        if(polygonStarted)
+        {
+            Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));;
+            cout << "cordy2: " << cursorPoint.x << " " << cursorPoint.y << endl;
+
+            if(render.allVertexes.size() > 1)
+                render.allVertexes.pop_back();
+            if(render.allSegments.size() > 0)
+                render.allSegments.pop_back();
+
+            render.addVertex(cursorPoint);
+            render.addSegment(*prevPoint, cursorPoint);
+        }
+        else
+        {
+            cout << "yeahh " << render.allVertexes.size() <<  endl;
         }
        
         window.clear();
-    
+
+        render.draw();
+
         window.display();
     }
 

@@ -93,3 +93,5 @@ int main()
     }
 ...
 }
+
+window initialezed in main function is not the same in Polygon.cpp

@@ -58,6 +58,13 @@ public:
         return Point(x*len, y*len);
     }
 
+    bool pointInCircle(const Point& p)
+    {
+        if(sqrt((p.x-x)*(p.x-x) + (p.y-y)*(p.y-y)) < radius)
+            return true;
+        return false;
+    }
+
     // void drawPoint()
     // {
     //     Vertex v(Vector2f(ctd(*this).x, ctd(*this).y));
