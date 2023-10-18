@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/program.dir/Line.cpp.o.d"
   "CMakeFiles/program.dir/Point.cpp.o"
   "CMakeFiles/program.dir/Point.cpp.o.d"
+  "CMakeFiles/program.dir/Polygon.cpp.o"
+  "CMakeFiles/program.dir/Polygon.cpp.o.d"
   "CMakeFiles/program.dir/program.cpp.o"
   "CMakeFiles/program.dir/program.cpp.o.d"
   "program"

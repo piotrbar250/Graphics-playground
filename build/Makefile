@@ -177,6 +177,30 @@ Point.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/Point.cpp.s
 .PHONY : Point.cpp.s
 
+Polygon.o: Polygon.cpp.o
+.PHONY : Polygon.o
+
+# target to build an object file
+Polygon.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/Polygon.cpp.o
+.PHONY : Polygon.cpp.o
+
+Polygon.i: Polygon.cpp.i
+.PHONY : Polygon.i
+
+# target to preprocess a source file
+Polygon.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/Polygon.cpp.i
+.PHONY : Polygon.cpp.i
+
+Polygon.s: Polygon.cpp.s
+.PHONY : Polygon.s
+
+# target to generate assembly for a file
+Polygon.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/Polygon.cpp.s
+.PHONY : Polygon.cpp.s
+
 program.o: program.cpp.o
 .PHONY : program.o
 
@@ -216,6 +240,9 @@ help:
 	@echo "... Point.o"
 	@echo "... Point.i"
 	@echo "... Point.s"
+	@echo "... Polygon.o"
+	@echo "... Polygon.i"
+	@echo "... Polygon.s"
 	@echo "... program.o"
 	@echo "... program.i"
 	@echo "... program.s"

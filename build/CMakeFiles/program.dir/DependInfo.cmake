@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/piotrbaranowski/Desktop/Software projects/SFML/Graphics playground/Line.cpp" "CMakeFiles/program.dir/Line.cpp.o" "gcc" "CMakeFiles/program.dir/Line.cpp.o.d"
   "/Users/piotrbaranowski/Desktop/Software projects/SFML/Graphics playground/Point.cpp" "CMakeFiles/program.dir/Point.cpp.o" "gcc" "CMakeFiles/program.dir/Point.cpp.o.d"
+  "/Users/piotrbaranowski/Desktop/Software projects/SFML/Graphics playground/Polygon.cpp" "CMakeFiles/program.dir/Polygon.cpp.o" "gcc" "CMakeFiles/program.dir/Polygon.cpp.o.d"
   "/Users/piotrbaranowski/Desktop/Software projects/SFML/Graphics playground/program.cpp" "CMakeFiles/program.dir/program.cpp.o" "gcc" "CMakeFiles/program.dir/program.cpp.o.d"
   )
 
