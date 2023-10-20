@@ -65,6 +65,11 @@ public:
         return false;
     }
 
+    bool operator==(const Point& p)
+    {
+        return x == p.x and y == p.y;
+    }
+
     // void drawPoint()
     // {
     //     Vertex v(Vector2f(ctd(*this).x, ctd(*this).y));

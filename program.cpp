@@ -11,16 +11,18 @@ using namespace std;
 using namespace sf;
 
 RenderWindow window;
+Mode currentMode;
 
 int main()
 {
     window.create(sf::VideoMode(1152, 720), "Polygon editor");
     window.display();
 
-    Mode currentMode = DRAWING;
+    currentMode = DRAWING;
     Render render;
 
     PolygonDrawer polygonDrawer(render);
+    PolygonEditor* polygonEditor = new PolygonEditor(render);
 
     bool polygonStarted = false;
 
@@ -34,6 +36,7 @@ int main()
                 window.close();
             if(event.type == Event::KeyPressed and event.key.code == Keyboard::E)
             {
+                polygonEditor = new PolygonEditor(render);
                 currentMode = EDITING;
             }
             if (event.type == Event::MouseButtonPressed)
@@ -46,7 +49,7 @@ int main()
                 }
                 else if(currentMode == EDITING)
                 {
-
+                    polygonEditor->mouseClickHandler(cursorPoint);
                 }
             }
         }
@@ -54,6 +57,10 @@ int main()
         if (currentMode == DRAWING)
         {
             polygonDrawer.temporarySegmentHanlder();
+        }
+        else if(currentMode == EDITING)
+        {
+            polygonEditor->temporarySegmentHanlder();
         }
 
         window.clear();

@@ -19,7 +19,7 @@ public:
 
     Polygon(const Point& p) : start(p.x, p.y)
     {
-        vertexes.push_back(Point(p.x, p.y)); // is it needed?
+        // vertexes.push_back(Point(p.x, p.y)); // is it needed?
     }
 
     void addVertex(const Point & p)

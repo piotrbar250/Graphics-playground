@@ -16,28 +16,50 @@ public:
     Polygon *polygon;
     Point *prevPoint;
     Render& render;
+
+    bool firstIterationAfterClicking = false;
+
     PolygonDrawer(Render &render) : render(render) {}
     void mouseClickHandler(const Point &cursorPoint)
     {
+        firstIterationAfterClicking = true;
+
         if (!drawingStarted)
         {
+            drawingStarted = true;
             polygon = new Polygon(cursorPoint);
             render.addPolygon(polygon);
-            drawingStarted = true;
-
+            polygon->addVertex(cursorPoint);
             prevPoint = new Point(cursorPoint.x, cursorPoint.y);
         }
         else
         {
-            polygon->addSegment(*prevPoint, cursorPoint);
-            delete prevPoint;
+            polygon->popSegment();
+            polygon->popVertex();
+
             if (polygon->start.pointInCircle(cursorPoint))
             {
                 drawingStarted = false;
-                polygon->popVertex();
+             
+                polygon->addSegment(*prevPoint, polygon->start);
+                delete prevPoint;
+
+                cout << "Drawing has been finished" << endl;
+                for(Segment& segment: polygon->segments)
+                {
+                    cout << segment.b << " " << segment.e << endl;
+                }
+                cout << endl;
+
+                for(Point& vertex: polygon->vertexes)
+                {
+                    cout << vertex << endl;
+                }
             }
             else
             {
+                polygon->addSegment(*prevPoint, cursorPoint);
+                delete prevPoint;
                 polygon->addVertex(cursorPoint);
                 prevPoint = new Point(cursorPoint.x, cursorPoint.y);
             }
@@ -50,10 +72,14 @@ public:
         {
             Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
 
-            if (polygon->vertexes.size() > 1)
-                polygon->popVertex();
-            if (polygon->segments.size() > 0)
-                polygon->popSegment();
+            if(firstIterationAfterClicking)
+                firstIterationAfterClicking = false;
+            else
+            {
+                    polygon->popVertex();
+                    polygon->popSegment();
+            }
+
 
             polygon->addVertex(cursorPoint);
             polygon->addSegment(*prevPoint, cursorPoint);
@@ -63,5 +89,108 @@ public:
 
 class PolygonEditor
 {
+public:
+    bool editingStarted = false;
+    Render& render;
+    Polygon* selectedPolygon = nullptr;
+    Point* selectedPoint = nullptr;
+    Segment* adjacentSegments[2];
+    Point* adjacentSegmentsPoints[2];
 
+    PolygonEditor(Render& render) : render(render)
+    {
+        for(int i = 0; i < 2; i++)
+        {
+            adjacentSegments[i] = nullptr;
+            adjacentSegmentsPoints[i] = nullptr;
+        }
+    }
+
+    void mouseClickHandler(const Point& cursorPoint)
+    {
+        if(!editingStarted)
+        {
+            editingStarted = true;
+            for(Polygon*& polygon: render.polygons)
+            {
+                for(Point& vertex: polygon->vertexes)
+                {
+                    if(vertex.pointInCircle(cursorPoint))
+                    {
+                        cout << "yeahh" << endl;
+                        selectedPoint = &vertex;
+                        selectedPolygon = polygon;
+                    }
+                }
+            }
+
+            if(selectedPoint)
+            {
+                for(Segment& segment: selectedPolygon->segments)
+                {
+                    if(segment.b == *selectedPoint)
+                    {
+                       
+                        if(!adjacentSegments[0])
+                        {
+                            cout << "yeahh2" << endl;
+                            adjacentSegments[0] = &segment;
+                            adjacentSegmentsPoints[0] = &(segment.b);
+                        }
+                        else
+                        {
+                            cout << "yeahh3" << endl;
+                            adjacentSegments[1] = &segment;
+                            adjacentSegmentsPoints[1] = &(segment.b);
+                            break;
+                        }
+                    }
+
+                    if(segment.e == *selectedPoint)
+                    {
+                       
+                        if(!adjacentSegments[0])
+                        {
+                            cout << "yeahh4" << endl;
+                            adjacentSegments[0] = &segment;
+                            adjacentSegmentsPoints[0] = &(segment.e);
+                        }
+                        else
+                        {
+                            cout << "yeahh5" << endl;
+                            adjacentSegments[1] = &segment;
+                            adjacentSegmentsPoints[1] = &(segment.e);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            editingStarted = false;
+            Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
+            *(adjacentSegmentsPoints[0]) = cursorPoint;
+            *(adjacentSegmentsPoints[1]) = cursorPoint;
+            *selectedPoint = cursorPoint;
+            currentMode = DRAWING;
+        }
+    }
+
+    void temporarySegmentHanlder()
+    {
+        if(editingStarted)
+        {
+            Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
+            // delete adjacentSegmentsPoints[0];
+            *(adjacentSegmentsPoints[0]) = cursorPoint;
+            *(adjacentSegmentsPoints[1]) = cursorPoint;
+            *selectedPoint = cursorPoint;
+            // adjacentSegmentsPoints[1] = new Point(cursorPoint);
+            // adjacentSegments[0]->b = new Point(cursorPoint);
+            // adjacentSegmentsPoints[1]-> = new Point(cursorPoint);
+
+            cout << *adjacentSegmentsPoints[0] << "    " << adjacentSegments[0]->b << " " << adjacentSegments[0]->e << endl;
+        }
+    }
 };
