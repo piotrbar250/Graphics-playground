@@ -5,25 +5,10 @@
 #include "Line.cpp"
 #include "Polygon.cpp"
 #include "Render.cpp"
+#include "PolygonDrawer.cpp"
 
 using namespace std;
 using namespace sf;
-
-
-Vertex dtc(const Vertex& p)
-{
-    return Vertex(Vector2f(p.position.x, N - p.position.y));
-}
-
-Vertex ctd(const Vertex& p)
-{
-    return Vertex(Vector2f(p.position.x, N - p.position.y));
-}
-
-ostream& operator <<(ostream& os, const Vertex& v)
-{
-    return os << v.position.x << " " << v.position.y;
-}
 
 RenderWindow window;
 
@@ -32,76 +17,45 @@ int main()
     window.create(sf::VideoMode(1152, 720), "Polygon editor");
     window.display();
 
+    Mode currentMode = DRAWING;
     Render render;
 
+    PolygonDrawer polygonDrawer(render);
+
     bool polygonStarted = false;
-    Polygon* polygon;
-    Point* prevPoint;
 
     while (window.isOpen())
     {
         Event event;
 
         while (window.pollEvent(event))
-        {   
-            if(event.type == Event::Closed)
+        {
+            if (event.type == Event::Closed)
                 window.close();
-            if(event.type == Event::MouseButtonPressed)
+            if(event.type == Event::KeyPressed and event.key.code == Keyboard::E)
+            {
+                currentMode = EDITING;
+            }
+            if (event.type == Event::MouseButtonPressed)
             {
                 Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
 
-                if(!polygonStarted)
+                if (currentMode == DRAWING)
                 {
-                    polygon = new Polygon(cursorPoint);
-                    render.addPolygon(polygon);
-                    polygonStarted = true;
-                    
-                    prevPoint = new Point(cursorPoint.x, cursorPoint.y);
-                    cout << "cordy: " << cursorPoint.x << " " << cursorPoint.y << endl;
+                    polygonDrawer.mouseClickHandler(cursorPoint);
                 }
-                else
+                else if(currentMode == EDITING)
                 {
-                    polygon->addSegment(*prevPoint, cursorPoint);
-                    delete prevPoint;
-                
-                    if(polygon->start.pointInCircle(cursorPoint))
-                    {
-                        polygonStarted = false;
-                        polygon->popVertex();
-                    }
-                    else
-                    {
-                        polygon->addVertex(cursorPoint);
-                        prevPoint = new Point(cursorPoint.x, cursorPoint.y);
-                    }
+
                 }
             }
         }
 
-        if(polygonStarted)
+        if (currentMode == DRAWING)
         {
-            Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));;
-            cout << "cordy2: " << cursorPoint.x << " " << cursorPoint.y << endl;
-
-            if(polygon->vertexes.size() > 1)
-                polygon->popVertex();
-            if(polygon->segments.size() > 0)
-                polygon->popSegment();
-
-            polygon->addVertex(cursorPoint);
-            polygon->addSegment(*prevPoint, cursorPoint);
+            polygonDrawer.temporarySegmentHanlder();
         }
-        else
-        {
-            cout << "yeahh "; //polygon->vertexes.size() <<  endl;
-            if(polygon != nullptr)
-            {
-                cout << polygon->vertexes.size() << " " << polygon->segments.size() << endl;
-            }
-            else
-                cout << endl;
-        }
-       
+
         window.clear();
 
         render.draw();

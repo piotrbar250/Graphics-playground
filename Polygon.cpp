@@ -17,15 +17,12 @@ public:
     
     Polygon() : vertexes(vector<Point>()), segments(vector<Segment>()) {}
 
-    Polygon(Point& p) : start(p.x, p.y)
+    Polygon(const Point& p) : start(p.x, p.y)
     {
         vertexes.push_back(Point(p.x, p.y)); // is it needed?
-        // cout << "hello here" << endl;
-        // cout << window.getSize().x << " " << window.getSize().y << endl;
-        // p.drawCircle();
     }
 
-    void addVertex(Point & p)
+    void addVertex(const Point & p)
     {
         vertexes.push_back(Point(p.x, p.y));
     }

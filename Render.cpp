@@ -11,7 +11,6 @@ using namespace sf;
 class Render
 {
 public: 
-
     vector<Polygon*> polygons;
 
     Render() : polygons(vector<Polygon*>()) {}
@@ -51,6 +50,7 @@ public:
 
     void draw()
     {
+        int i = 0;
         for(auto& polygon: polygons)
         {
             for(auto& seg: polygon->segments)

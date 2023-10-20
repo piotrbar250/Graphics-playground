@@ -1,112 +1,256 @@
-I coding in c++ using sfml on mac m1.
-I've cloned SFML source from github to my home directory
-
-Now I am in the
-/Users/piotrbaranowski/Desktop/Software projects/SFML/Graphics playground
-
-I have created program.cpp
-and 
-CmakeLists.txt:
-cmake_minimum_required(VERSION 3.10)
-project(program)
-
-set(CMAKE_CXX_STANDARD 11)
-
-find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
-
-add_executable(program program.cpp)
-target_link_libraries(program sfml-graphics sfml-window sfml-system)
-
-then
-mkdir build && cd build
-cmake ..
-make
-
-Now when I am in build directory I can run ./program
-
-Thats: program.cpp
+program.cpp
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cmath>
-using namespace sf;
+#include "global.hpp"
+#include "Line.cpp"
+#include "Polygon.cpp"
+#include "Render.cpp"
+#include "PolygonDrawer.cpp"
+
 using namespace std;
+using namespace sf;
+
+RenderWindow window;
+
+int Render::num = 0;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1152, 720), "Polygon editor");
+    window.create(sf::VideoMode(1152, 720), "Polygon editor");
+    window.display();
 
-    Vertex nodes[20];
-    int n;
+    Mode currentMode = DRAWING;
+    cout << "jeden" << endl;
+    Render render;
+    cout << "dwa" << endl;
+    PolygonDrawer polygonDrawer(render);
 
-    bool segmentOn = false;
+    bool polygonStarted = false;
+    // Polygon *polygon;
+    // Point *prevPoint;
 
+
+    // render.polygons.push_back(nullptr);
     while (window.isOpen())
     {
-        sf::Event event;
+        Event event;
+
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            if (event.type == Event::Closed)
                 window.close();
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == Event::MouseButtonPressed)
             {
-                cout << "hello" << endl;
-                // nodes[n++] = Vertex(Vector2f(event.mouseButton.x, event.mouseButton.y));
-                nodes[0] = Vertex(Vector2f(event.mouseButton.x, event.mouseButton.y));
-                segmentOn = true;
-                
+                Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
 
+                if (currentMode == DRAWING)
+                {
+                    polygonDrawer.mouseClickHandler(cursorPoint);
+                    // if(!polygonStarted)
+                    // {
+                    //     polygon = new Polygon(cursorPoint);
+                    //     render.addPolygon(polygon);
+                    //     polygonStarted = true;
 
-                // if(!segmentOn)
-                //     segmentOn = true;
-                // else
-                // {
-                //     segmentOn = false;
+                    //     prevPoint = new Point(cursorPoint.x, cursorPoint.y);
+                    //     cout << "cordy: " << cursorPoint.x << " " << cursorPoint.y << endl;
+                    // }
+                    // else
+                    // {
+                    //     polygon->addSegment(*prevPoint, cursorPoint);
+                    //     delete prevPoint;
 
-                // }
+                    //     if(polygon->start.pointInCircle(cursorPoint))
+                    //     {
+                    //         polygonStarted = false;
+                    //         polygon->popVertex();
+                    //     }
+                    //     else
+                    //     {
+                    //         polygon->addVertex(cursorPoint);
+                    //         prevPoint = new Point(cursorPoint.x, cursorPoint.y);
+                    //     }
+                    // }
+                }
             }
+        }
+
+        if (currentMode == DRAWING)
+        {
+            polygonDrawer.temporarySegmentHanlder();
         }
 
         window.clear();
 
-        if(segmentOn)
-        {
-            nodes[1] = Vector2f(Mouse::getPosition(window));
-            cout << nodes[1].position.x << " " << nodes[1].position.y << endl;
-            
-            float x1 = nodes[0].position.x;
-            float y1 = nodes[0].position.y;
+        // cout << "liczba poligonow " << render.polygons.size() << endl
+        render.draw();
 
-            float x2 = nodes[1].position.x;
-            float y2 = nodes[1].position.y;
-
-            float len = sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
-            float angle_rad = atan2(y1-y2, x2-x1);
-            float angle_deg = angle_rad * 180.0 / M_PI;
-
-            RectangleShape segment(Vector2f(len, 5));
-            segment.setPosition(Vector2f(x1, y1));
-            segment.rotate(-angle_deg);
-            segment.setFillColor(Color(235, 222, 52));
-            window.draw(segment);
-        }   
-        // for(int i = 0; i < n; i++)
-        // {
-        //     CircleShape node(5);
-        //     node.setFillColor(Color::Green);
-        //     node.setPosition(nodes[i].position.x, nodes[i].position.y);
-        //     window.draw(node);
-        // }
-
-        // for(int i = 0; i < 1; i++)
-        // {
-        //     window.draw(&nodes[i], 1, sf::Points);
-        // }
-
-        
         window.display();
     }
-    return 0;
 }
 
+render.cpp
+#pragma once
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <cmath>
+#include "Point.cpp"
+#include "Polygon.cpp"
+#include "global.hpp"
+using namespace std;
+using namespace sf;
 
-I want to put Point and Line to separate files. Help me do this so it still compiles using the setup I have.
+class Render
+{
+public: 
+
+    static int num;
+    int privnum;
+    vector<Polygon*> polygons;
+
+    Render() : polygons(vector<Polygon*>()) {
+        cout << "nowy render" << endl;
+        privnum = num++;
+    }
+
+    void drawPoint(const Point& p)
+    {
+        Vertex v(Vector2f(ctd(p).x, ctd(p).y));
+        Vertex vA[] = {v};
+        window.draw(vA, 1, Points);
+    }
+
+    void drawSegment(const Segment& seg)
+    {
+        float x1 = seg.b.x;
+        float y1 = seg.b.y;
+
+        float x2 = seg.e.x;
+        float y2 = seg.e.y;
+
+        float len = sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+        float angle_rad = atan2(y1-y2, x2-x1);
+        float angle_deg = angle_rad * 180 / M_PI;
+
+        RectangleShape rect(Vector2f(len, 5));
+        rect.setPosition(Vector2f(ctd(seg.b).x, ctd(seg.b).y));
+        rect.rotate(angle_deg);
+        rect.setFillColor(Color::Green);
+        window.draw(rect);
+    }
+    
+    void drawCircle(const Point& p)
+    {
+        CircleShape circle(radius);
+        circle.setPosition(Vector2f(ctd(p).x-radius, ctd(p).y-radius));
+        window.draw(circle);
+    }
+
+    void draw()
+    {
+        // cout << "rysuje" << endl;
+        int i = 0;
+        for(auto& polygon: polygons)
+        {
+            cout << "taka petla " << ++i << endl;
+            for(auto& seg: polygon->segments)
+            drawSegment(seg);
+
+            for(auto& p: polygon->vertexes)
+            drawCircle(p);
+        }
+    }
+
+    void addPolygon(Polygon* polygon)
+    {
+
+        cout << "dodano polygon" << endl;
+        cout << "privnum " << privnum << endl;
+
+        polygons.push_back(polygon);
+
+        cout << "liczba poligonow po dodaniu" << polygons.size() << endl;
+    }
+};
+
+PolygonDrawer.cpp
+#pragma once
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <cmath>
+#include "global.hpp"
+#include "Polygon.cpp"
+#include "Render.cpp"
+
+using namespace std;
+using namespace sf;
+
+class PolygonDrawer
+{
+public:
+    bool drawingStarted = false;
+    Polygon *polygon;
+    Point *prevPoint;
+    Render render;
+    PolygonDrawer(Render &render) : render(render) {}
+    void mouseClickHandler(const Point &cursorPoint)
+    {
+        if (!drawingStarted)
+        {
+            polygon = new Polygon(cursorPoint);
+            render.addPolygon(polygon);
+            drawingStarted = true;
+
+            prevPoint = new Point(cursorPoint.x, cursorPoint.y);
+            cout << "cordy: " << cursorPoint.x << " " << cursorPoint.y << endl;
+        }
+        else
+        {
+            polygon->addSegment(*prevPoint, cursorPoint);
+            delete prevPoint;
+
+            if (polygon->start.pointInCircle(cursorPoint))
+            {
+                drawingStarted = false;
+                polygon->popVertex();
+            }
+            else
+            {
+                polygon->addVertex(cursorPoint);
+                prevPoint = new Point(cursorPoint.x, cursorPoint.y);
+            }
+        }
+    }
+
+    void temporarySegmentHanlder()
+    {
+        if (drawingStarted)
+        {
+            Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
+            // cout << "cordy2: tutaj " << cursorPoint.x << " " << cursorPoint.y << endl;
+
+            if (polygon->vertexes.size() > 1)
+                polygon->popVertex();
+            if (polygon->segments.size() > 0)
+                polygon->popSegment();
+
+            polygon->addVertex(cursorPoint);
+            polygon->addSegment(*prevPoint, cursorPoint);
+        }
+        else
+        {
+            // cout << "yeahh "; // polygon->vertexes.size() <<  endl;
+            if (polygon != nullptr)
+            {
+                // cout << polygon->vertexes.size() << " " << polygon->segments.size() << endl;
+            }
+            else
+            {
+                // cout << endl
+            }    
+        }
+    }
+};
+
+After clicking I add polygons to the render but the render doesn't draw them
