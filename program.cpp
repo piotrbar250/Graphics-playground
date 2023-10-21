@@ -23,7 +23,7 @@ int main()
 
     PolygonDrawer polygonDrawer(render);
     PolygonEditor* polygonEditor = new PolygonEditor(render);
-
+    PolygonVertexRemovingEditor* polygonVertexRemovingEditor;
     bool polygonStarted = false;
 
     while (window.isOpen())
@@ -39,6 +39,12 @@ int main()
                 polygonEditor = new PolygonEditor(render);
                 currentMode = EDITING;
             }
+            if(event.type == Event::KeyPressed and event.key.code == Keyboard::R)
+            {
+                polygonVertexRemovingEditor = new PolygonVertexRemovingEditor(render);
+                currentMode = VERTEX_REMOVING;
+
+            }
             if (event.type == Event::MouseButtonPressed)
             {
                 Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
@@ -50,6 +56,10 @@ int main()
                 else if(currentMode == EDITING)
                 {
                     polygonEditor->mouseClickHandler(cursorPoint);
+                }
+                else if(currentMode == VERTEX_REMOVING)
+                {
+                    polygonVertexRemovingEditor->mouseClickHandler(cursorPoint);
                 }
             }
         }

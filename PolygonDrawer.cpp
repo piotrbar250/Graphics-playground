@@ -15,7 +15,7 @@ public:
     bool drawingStarted = false;
     Polygon *polygon;
     Point *prevPoint;
-    Render& render;
+    Render &render;
 
     bool firstIterationAfterClicking = false;
 
@@ -40,18 +40,18 @@ public:
             if (polygon->start.pointInCircle(cursorPoint))
             {
                 drawingStarted = false;
-             
+
                 polygon->addSegment(*prevPoint, polygon->start);
                 delete prevPoint;
 
                 cout << "Drawing has been finished" << endl;
-                for(Segment& segment: polygon->segments)
+                for (Segment &segment : polygon->segments)
                 {
                     cout << segment.b << " " << segment.e << endl;
                 }
                 cout << endl;
 
-                for(Point& vertex: polygon->vertexes)
+                for (Point &vertex : polygon->vertexes)
                 {
                     cout << vertex << endl;
                 }
@@ -72,14 +72,13 @@ public:
         {
             Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
 
-            if(firstIterationAfterClicking)
+            if (firstIterationAfterClicking)
                 firstIterationAfterClicking = false;
             else
             {
-                    polygon->popVertex();
-                    polygon->popSegment();
+                polygon->popVertex();
+                polygon->popSegment();
             }
-
 
             polygon->addVertex(cursorPoint);
             polygon->addSegment(*prevPoint, cursorPoint);
@@ -91,31 +90,31 @@ class PolygonEditor
 {
 public:
     bool editingStarted = false;
-    Render& render;
-    Polygon* selectedPolygon = nullptr;
-    Point* selectedPoint = nullptr;
-    Segment* adjacentSegments[2];
-    Point* adjacentSegmentsPoints[2];
+    Render &render;
+    Polygon *selectedPolygon = nullptr;
+    Point *selectedPoint = nullptr;
+    Segment *adjacentSegments[2];
+    Point *adjacentSegmentsPoints[2];
 
-    PolygonEditor(Render& render) : render(render)
+    PolygonEditor(Render &render) : render(render)
     {
-        for(int i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             adjacentSegments[i] = nullptr;
             adjacentSegmentsPoints[i] = nullptr;
         }
     }
 
-    void mouseClickHandler(const Point& cursorPoint)
+    void mouseClickHandler(const Point &cursorPoint)
     {
-        if(!editingStarted)
+        if (!editingStarted)
         {
             editingStarted = true;
-            for(Polygon*& polygon: render.polygons)
+            for (Polygon *&polygon : render.polygons)
             {
-                for(Point& vertex: polygon->vertexes)
+                for (Point &vertex : polygon->vertexes)
                 {
-                    if(vertex.pointInCircle(cursorPoint))
+                    if (vertex.pointInCircle(cursorPoint))
                     {
                         cout << "yeahh" << endl;
                         selectedPoint = &vertex;
@@ -124,14 +123,14 @@ public:
                 }
             }
 
-            if(selectedPoint)
+            if (selectedPoint)
             {
-                for(Segment& segment: selectedPolygon->segments)
+                for (Segment &segment : selectedPolygon->segments)
                 {
-                    if(segment.b == *selectedPoint)
+                    if (segment.b == *selectedPoint)
                     {
-                       
-                        if(!adjacentSegments[0])
+
+                        if (!adjacentSegments[0])
                         {
                             cout << "yeahh2" << endl;
                             adjacentSegments[0] = &segment;
@@ -146,10 +145,10 @@ public:
                         }
                     }
 
-                    if(segment.e == *selectedPoint)
+                    if (segment.e == *selectedPoint)
                     {
-                       
-                        if(!adjacentSegments[0])
+
+                        if (!adjacentSegments[0])
                         {
                             cout << "yeahh4" << endl;
                             adjacentSegments[0] = &segment;
@@ -179,7 +178,7 @@ public:
 
     void temporarySegmentHanlder()
     {
-        if(editingStarted)
+        if (editingStarted)
         {
             Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
             // delete adjacentSegmentsPoints[0];
@@ -191,6 +190,92 @@ public:
             // adjacentSegmentsPoints[1]-> = new Point(cursorPoint);
 
             cout << *adjacentSegmentsPoints[0] << "    " << adjacentSegments[0]->b << " " << adjacentSegments[0]->e << endl;
+        }
+    }
+};
+
+class PolygonVertexRemovingEditor
+{
+public:
+    Render &render;
+    Polygon *selectedPolygon = nullptr;
+    Point *selectedPoint = nullptr;
+    Segment *adjacentSegments[2];
+    Point *adjacentSegmentsPoints[2];
+
+    PolygonVertexRemovingEditor(Render &render) : render(render) {}
+    void mouseClickHandler(const Point &cursorPoint)
+    {
+        for (Polygon *&polygon : render.polygons)
+        {
+            for (Point &vertex : polygon->vertexes)
+            {
+                if (vertex.pointInCircle(cursorPoint))
+                {
+                    cout << "yeahh-removing" << endl;
+                    selectedPoint = &vertex;
+                    selectedPolygon = polygon;
+                }
+            }
+        }
+
+        if (selectedPoint)
+        {
+            for (Segment &segment : selectedPolygon->segments)
+            {
+                if (segment.b == *selectedPoint)
+                {
+
+                    if (!adjacentSegments[0])
+                    {
+                        cout << "yeahh2" << endl;
+                        adjacentSegments[0] = &segment;
+                        adjacentSegmentsPoints[0] = &(segment.e);
+                    }
+                    else
+                    {
+                        cout << "yeahh3" << endl;
+                        adjacentSegments[1] = &segment;
+                        adjacentSegmentsPoints[1] = &(segment.e);
+                        break;
+                    }
+                }
+
+                if (segment.e == *selectedPoint)
+                {
+
+                    if (!adjacentSegments[0])
+                    {
+                        cout << "yeahh4" << endl;
+                        adjacentSegments[0] = &segment;
+                        adjacentSegmentsPoints[0] = &(segment.b);
+                    }
+                    else
+                    {
+                        cout << "yeahh5" << endl;
+                        adjacentSegments[1] = &segment;
+                        adjacentSegmentsPoints[1] = &(segment.b);
+                        break;
+                    }
+                }
+            }
+
+            vector<Segment> tmp = vector<Segment>(); // is that needed?
+            int cnt = 0;
+
+            cout << "sasiedzi " <<  *adjacentSegmentsPoints[0] << " " << *adjacentSegmentsPoints[1] << endl;
+
+            for (Segment &segment : selectedPolygon->segments)
+            {
+                if (segment.b == *selectedPoint or segment.e == *selectedPoint && cnt == 0)
+                {
+                    cnt++;
+                    tmp.push_back(Segment(*adjacentSegmentsPoints[0], *adjacentSegmentsPoints[1]));
+                }
+                else
+                    tmp.push_back(segment);
+            }
+            selectedPolygon->segments = tmp;
         }
     }
 };

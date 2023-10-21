@@ -6,7 +6,8 @@ using namespace sf;
 
 enum Mode {
     DRAWING,
-    EDITING
+    EDITING,
+    VERTEX_REMOVING
 };
 
 
@@ -36,4 +37,20 @@ also in c# !!
 
 /*
 Does copying class object calls constructor of it
+*/
+
+/*
+comparing two variables based on the memory, pointer
+*/
+
+/*
+what was deep copying and do vectors perform deep copying
+if i have a vector<segment> vec and also vector<segment> tmp and I do vec = tmp does it copy or reference
+ChatGPT
+When you do vec = tmp with std::vector<Segment> vec and std::vector<Segment> tmp, it performs a copy assignment. This means:
+
+The elements in vec are replaced by a copy of the elements in tmp.
+The size of vec becomes the same as tmp.
+After the assignment, vec and tmp are two separate vectors with their own copies of the data. Modifying an element in one vector won't affect the other vector.
+It's not a reference assignment; the two vectors don't share the same underlying data after the assignment. The assignment operator for std::vector creates a deep copy of the elements from the source vector (tmp) to the destination vector (vec).
 */

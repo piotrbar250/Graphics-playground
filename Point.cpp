@@ -93,4 +93,9 @@ public:
 
     Segment(const Point& b, const Point& e) : b(b.x, b.y), e(e.x, e.y)
     {}
+
+    bool operator ==(const Segment& p)
+    {
+        return b == p.b and e == p.e;
+    }
 };
