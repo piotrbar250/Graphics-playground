@@ -6,6 +6,8 @@
 #include "Polygon.cpp"
 #include "Render.cpp"
 #include "PolygonDrawer.cpp"
+#include "PolygonEditor.cpp"
+#include "PolygonVertexRemovingEditor.cpp"
 
 using namespace std;
 using namespace sf;
@@ -34,6 +36,7 @@ int main()
         {
             if (event.type == Event::Closed)
                 window.close();
+
             if(event.type == Event::KeyPressed and event.key.code == Keyboard::E)
             {
                 polygonEditor = new PolygonEditor(render);
