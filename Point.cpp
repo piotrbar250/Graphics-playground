@@ -57,6 +57,11 @@ public:
     {
         return Point(x*len, y*len);
     }
+    
+    Point operator+(const Point& p) const
+    {
+        return Point(x+p.x, y+p.y);
+    }
 
     bool pointInCircle(const Point& p)
     {

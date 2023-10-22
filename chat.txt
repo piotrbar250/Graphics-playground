@@ -1,97 +1,179 @@
-global.hpp:
+Line.cpp:
 #pragma once
-
 #include <SFML/Graphics.hpp>
-#include <cmath>
-using namespace std;
-using namespace sf;
-
-const int M = 1152, N = 720;
-extern RenderWindow window;
-
-Polygon.cpp:
-#pragma once
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <cmath>
 #include "Point.cpp"
-#include "global.hpp"
+#include <chrono>
+#include <thread>
 using namespace std;
 using namespace sf;
 
-class Polygon
+class Line
 {
 public:
-    RenderWindow window;
-    vector<Point> vertices;
-    Point start;
-    
-    Polygon() {}
+    float A, B, C;
+    bool isVertical;
+    Point verticalVector;
 
-    Polygon(Point& p) : start(p.x, p.y)
+    Line(const Point& p1, const Point& p2)
     {
-        vertices.push_back(Point(p.x, p.y)); // is it needed?
-        cout << "hello here" << endl;
-        cout << window.getSize().x << " " << window.getSize().y << endl; // prints 0 0
-        p.draw(window);
-        
+        A = p1.y - p2.y;
+        B = p2.x - p1.x;
+        C = p1.x * (p2.y - p1.y) + (p1.x - p2.x) * p1.y; 
+        isVertical = B == 0;
+        verticalVector = Point(A, B).normalised();
     }
 
-    void addVertex(Point & p)
+    float getY(float x) const
     {
-        vertices.push_back(Point(p.x, p.y));
-        p.draw(window);
+        return (-A*x - C) / B;
+    }
+
+    Vertex* vertexesOnLine() const
+    {
+        Vertex* nodes = new Vertex[M];
+        if(!isVertical)
+        {
+            for(int i = 0; i < M; i++)
+            {
+                nodes[i].position = Vector2f(i, getY(i));
+            }
+        }
+        return nodes;
+    }
+
+    void draw() const
+    {
+        Vertex* nodes = vertexesOnLine();
+        window.draw(nodes, M, sf::Lines);
+    }
+
+    float dis(const Point& p)
+    {
+        return fabs(A*p.x + B*p.y + C) / sqrt(A*A + B*B);
+    }
+
+    Line parallelLine(const Segment& segment, float offset)
+    {
+        return Line(segment.b + verticalVector*offset, segment.e + verticalVector*offset)
     }
 };
 
-program.cpp:
-#include <SFML/Graphics.hpp>
+Point.cpp:
+#pragma once
 #include <iostream>
+#include <SFML/Graphics.hpp>
 #include <cmath>
-#include "Line.cpp"
-#include "Polygon.cpp"
 #include "global.hpp"
-
 using namespace std;
 using namespace sf;
 
 
-int main()
+class Point
 {
-    RenderWindow window(sf::VideoMode(1152, 720), "Polygon editor");
-    // int M = 1152, N = 720;
-    Vertex nodes[20];
-    int n;
-
-    bool segmentOn = false;
-    bool polygonStarted = false;
-    Polygon* polygon;
-
-    while (window.isOpen())
+public:
+    float x, y;
+    Point(){}
+    // Point(float x, float y) : x(x), y(y) {}
+    Point(float x, float y)
     {
-        Event event;
-
-        while (window.pollEvent(event))
-        {
-            if(event.type == Event::Closed)
-                window.close();
-            if(event.type == Event::MouseButtonPressed)
-            {
-                if(!polygonStarted)
-                {
-                    cout << "hello" << endl;
-                    cout << window.getSize().x << " " << window.getSize().y << endl;
-                    polygonStarted = true;
-                    Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
-                    // polygon(cursorPoint);
-                    polygon = new Polygon(cursorPoint);
-                    // window.draw()
-                }
-            }
-        }
-        window.display();
+        this->x = x;
+        this->y = y;
     }
-...
-}
 
-window initialezed in main function is not the same in Polygon.cpp
+    Point transform(const Point& v)
+    {
+        return Point(x+v.x, y+v.y);
+    }
+
+    float dot(const Point& v)
+    {
+        return x*v.x + y*v.y;
+    }
+
+    float norm()
+    {
+        return sqrt(x*x + y*y);
+    }
+    Point normalised()
+    {
+        return Point(x / norm(), y / norm());
+    }
+
+    friend Point dtc(const Point& p)
+    {
+        return Point(p.x, N - p.y);
+    }
+
+    friend Point ctd(const Point& p)
+    {
+        return Point(p.x, N - p.y);
+    }
+
+    friend ostream& operator <<(ostream& os, const Point& p)
+    {
+        return os << p.x << ' ' << p.y;
+    }
+
+    Point operator*(float len)
+    {
+        return Point(x*len, y*len);
+    }
+    
+    Point operator+(const Point& p)
+    {
+        return Point(x+p.x, y+p.y);
+    }
+
+    bool pointInCircle(const Point& p)
+    {
+        if(sqrt((p.x-x)*(p.x-x) + (p.y-y)*(p.y-y)) < radius)
+            return true;
+        return false;
+    }
+
+    bool operator==(const Point& p)
+    {
+        return x == p.x and y == p.y;
+    }
+
+    // void drawPoint()
+    // {
+    //     Vertex v(Vector2f(ctd(*this).x, ctd(*this).y));
+    //     Vertex vA[] = {v};
+    //     window.draw(vA, 1, Points);
+    //     cout << "hello even here" << endl;
+    // }
+
+    void drawCircle()
+    {
+        CircleShape circle(radius);
+        circle.setPosition(Vector2f(ctd(*this).x-radius, ctd(*this).y-radius));
+        window.draw(circle);
+    }
+};
+
+class Segment
+{
+public:
+    Point b, e;
+
+    Segment(const Point& b, const Point& e) : b(b.x, b.y), e(e.x, e.y)
+    {}
+
+    bool operator ==(const Segment& p)
+    {
+        return b == p.b and e == p.e;
+    }
+};
+
+whats wrong here:
+   Line parallelLine(const Segment& segment, float offset)
+    {
+        return Line(segment.b + verticalVector*offset, segment.e + verticalVector*offset);
+    }
+no operator "+" matches these operandsC/C++(349)
+Line.cpp(56, 31): operand types are: const Point + Point
+Line.cpp(56, 31): function "sf::operator+(sf::Time left, sf::Time right)" does not match because argument #1 does not match parameter
+Line.cpp(56, 31): function "sf::operator+(const sf::String &left, const sf::String &right)" does not match because argument #1 does not match parameter
+Line.cpp(56, 31): candidate function template "sf::operator+(const sf::Vector2<T> &left, const sf::Vector2<T> &right)" failed deduction
+Line.cpp(56, 31): candidate function template "sf::operator+(const sf::Vector3<T> &left, const sf::Vector3<T> &right)" failed deduction

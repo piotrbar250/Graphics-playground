@@ -8,6 +8,7 @@
 #include "PolygonDrawer.cpp"
 #include "PolygonEditor.cpp"
 #include "PolygonVertexRemovingEditor.cpp"
+#include "PolygonVertexInsertingEditor.cpp"
 
 using namespace std;
 using namespace sf;
@@ -26,6 +27,8 @@ int main()
     PolygonDrawer polygonDrawer(render);
     PolygonEditor* polygonEditor = new PolygonEditor(render);
     PolygonVertexRemovingEditor* polygonVertexRemovingEditor;
+    PolygonVertexInsertingEditor* polygonVertexInsertingEditor;
+
     bool polygonStarted = false;
 
     while (window.isOpen())
@@ -46,8 +49,14 @@ int main()
             {
                 polygonVertexRemovingEditor = new PolygonVertexRemovingEditor(render);
                 currentMode = VERTEX_REMOVING;
-
             }
+            if(event.type == Event::KeyPressed and event.key.code == Keyboard::I)
+            {
+                polygonVertexInsertingEditor = new PolygonVertexInsertingEditor(render);
+                currentMode = VERTEX_INSERTING;
+            }
+            
+
             if (event.type == Event::MouseButtonPressed)
             {
                 Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
@@ -63,6 +72,10 @@ int main()
                 else if(currentMode == VERTEX_REMOVING)
                 {
                     polygonVertexRemovingEditor->mouseClickHandler(cursorPoint);
+                }
+                else if(currentMode == VERTEX_INSERTING)
+                {
+                    polygonVertexInsertingEditor->mouseClickHandler(cursorPoint);
                 }
             }
         }

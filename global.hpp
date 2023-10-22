@@ -7,13 +7,15 @@ using namespace sf;
 enum Mode {
     DRAWING,
     EDITING,
-    VERTEX_REMOVING
+    VERTEX_REMOVING,
+    VERTEX_INSERTING
 };
 
 
 // extern int M = 1152, N = 720; // const ?? 
 const int M = 1152, N = 720;
 const float radius = 10;
+const float thickness = 6;
 extern RenderWindow window;
 extern Mode currentMode; 
 
@@ -53,4 +55,8 @@ The elements in vec are replaced by a copy of the elements in tmp.
 The size of vec becomes the same as tmp.
 After the assignment, vec and tmp are two separate vectors with their own copies of the data. Modifying an element in one vector won't affect the other vector.
 It's not a reference assignment; the two vectors don't share the same underlying data after the assignment. The assignment operator for std::vector creates a deep copy of the elements from the source vector (tmp) to the destination vector (vec).
+*/
+
+/*
+returning reference to the local variable
 */

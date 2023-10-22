@@ -20,7 +20,7 @@ public:
     Point *adjacentSegmentsPoints[2];
 
     PolygonVertexRemovingEditor(Render &render) : render(render) {}
-    
+
     void mouseClickHandler(const Point &cursorPoint)
     {
         for (Polygon *&polygon : render.polygons)
@@ -29,7 +29,7 @@ public:
             {
                 if (vertex.pointInCircle(cursorPoint))
                 {
-                    cout << "yeahh-removing" << endl;
+                    // cout << "yeahh-removing" << endl;
                     selectedPoint = &vertex;
                     selectedPolygon = polygon;
                 }
@@ -42,16 +42,13 @@ public:
             {
                 if (segment.b == *selectedPoint)
                 {
-
                     if (!adjacentSegments[0])
                     {
-                        cout << "yeahh2" << endl;
                         adjacentSegments[0] = &segment;
                         adjacentSegmentsPoints[0] = &(segment.e);
                     }
                     else
                     {
-                        cout << "yeahh3" << endl;
                         adjacentSegments[1] = &segment;
                         adjacentSegmentsPoints[1] = &(segment.e);
                         break;
@@ -63,13 +60,11 @@ public:
 
                     if (!adjacentSegments[0])
                     {
-                        cout << "yeahh4" << endl;
                         adjacentSegments[0] = &segment;
                         adjacentSegmentsPoints[0] = &(segment.b);
                     }
                     else
                     {
-                        cout << "yeahh5" << endl;
                         adjacentSegments[1] = &segment;
                         adjacentSegmentsPoints[1] = &(segment.b);
                         break;
@@ -84,15 +79,26 @@ public:
 
             for (Segment &segment : selectedPolygon->segments)
             {
-                if (segment.b == *selectedPoint or segment.e == *selectedPoint && cnt == 0)
+                if (segment.b == *selectedPoint or segment.e == *selectedPoint)
                 {
-                    cnt++;
-                    tmp.push_back(Segment(*adjacentSegmentsPoints[0], *adjacentSegmentsPoints[1]));
+                    cout << "usuwam segment " << segment.b << " " << segment.e << endl;
+                    if(cnt++ == 0)
+                        tmp.push_back(Segment(*adjacentSegmentsPoints[0], *adjacentSegmentsPoints[1]));
                 }
                 else
                     tmp.push_back(segment);
             }
             selectedPolygon->segments = tmp;
+
+
+            vector<Point> tmpP;
+            for(Point& vertex: selectedPolygon->vertexes)
+            {
+                if(vertex == *selectedPoint)
+                    continue;
+                tmpP.push_back(vertex);
+            }
+            selectedPolygon->vertexes = tmpP;
         }
     }
 };

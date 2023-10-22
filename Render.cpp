@@ -5,13 +5,15 @@
 #include "Point.cpp"
 #include "Polygon.cpp"
 #include "global.hpp"
+#include "Line.cpp"
 using namespace std;
 using namespace sf;
 
 class Render
 {
-public: 
+public:
     vector<Polygon*> polygons;
+    vector<Line> lines;
 
     Render() : polygons(vector<Polygon*>()) {}
 
@@ -34,7 +36,7 @@ public:
         float angle_rad = atan2(y1-y2, x2-x1);
         float angle_deg = angle_rad * 180 / M_PI;
 
-        RectangleShape rect(Vector2f(len, 5));
+        RectangleShape rect(Vector2f(len, thickness));
         rect.setPosition(Vector2f(ctd(seg.b).x, ctd(seg.b).y));
         rect.rotate(angle_deg);
         rect.setFillColor(Color::Green);
@@ -48,6 +50,11 @@ public:
         window.draw(circle);
     }
 
+    void drawLine(const Line& line)
+    {
+        line.draw();
+    }
+
     void draw()
     {
         int i = 0;
@@ -58,6 +65,11 @@ public:
 
             for(auto& p: polygon->vertexes)
             drawCircle(p);
+        }
+
+        for(auto& l: lines)
+        {
+            drawLine(l);
         }
     }
 
