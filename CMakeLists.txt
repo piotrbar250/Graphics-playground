@@ -5,5 +5,5 @@ set(CMAKE_CXX_STANDARD 11)
 
 find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
 
-add_executable(program program.cpp global.hpp Point.cpp Line.cpp Polygon.cpp Render.cpp PolygonDrawer.cpp PolygonEditor.cpp PolygonVertexRemovingEditor.cpp PolygonVertexInsertingEditor.cpp)
+add_executable(program program.cpp global.hpp Point.hpp Point.cpp Line.hpp Line.cpp Polygon.hpp Render.hpp PolygonDrawer.hpp PolygonEditor.hpp PolygonVertexRemovingEditor.hpp PolygonVertexInsertingEditor.hpp include.hpp)
 target_link_libraries(program sfml-graphics sfml-window sfml-system)

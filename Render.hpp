@@ -2,10 +2,10 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "Point.cpp"
-#include "Polygon.cpp"
+#include "Point.hpp"
+#include "Polygon.hpp"
 #include "global.hpp"
-#include "Line.cpp"
+#include "Line.hpp"
 using namespace std;
 using namespace sf;
 
@@ -19,7 +19,7 @@ public:
 
     void drawPoint(const Point& p)
     {
-        Vertex v(Vector2f(ctd(p).x, ctd(p).y));
+        Vertex v(Vector2f(dtc(p).x, dtc(p).y));
         Vertex vA[] = {v};
         window.draw(vA, 1, Points);
     }
@@ -37,7 +37,7 @@ public:
         float angle_deg = angle_rad * 180 / M_PI;
 
         RectangleShape rect(Vector2f(len, thickness));
-        rect.setPosition(Vector2f(ctd(seg.b).x, ctd(seg.b).y));
+        rect.setPosition(Vector2f(dtc(seg.b).x, dtc(seg.b).y));
         rect.rotate(angle_deg);
         rect.setFillColor(Color::Green);
         window.draw(rect);
@@ -46,7 +46,7 @@ public:
     void drawCircle(const Point& p)
     {
         CircleShape circle(radius);
-        circle.setPosition(Vector2f(ctd(p).x-radius, ctd(p).y-radius));
+        circle.setPosition(Vector2f(dtc(p).x-radius, dtc(p).y-radius));
         window.draw(circle);
     }
 

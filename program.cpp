@@ -2,13 +2,14 @@
 #include <iostream>
 #include <cmath>
 #include "global.hpp"
-#include "Line.cpp"
-#include "Polygon.cpp"
-#include "Render.cpp"
-#include "PolygonDrawer.cpp"
-#include "PolygonEditor.cpp"
-#include "PolygonVertexRemovingEditor.cpp"
-#include "PolygonVertexInsertingEditor.cpp"
+#include "Point.hpp"
+#include "Line.hpp"
+#include "Polygon.hpp"
+#include "Render.hpp"
+#include "PolygonDrawer.hpp"
+#include "PolygonEditor.hpp"
+#include "PolygonVertexRemovingEditor.hpp"
+#include "PolygonVertexInsertingEditor.hpp"
 
 using namespace std;
 using namespace sf;
@@ -59,7 +60,7 @@ int main()
 
             if (event.type == Event::MouseButtonPressed)
             {
-                Point cursorPoint(ctd(Point(event.mouseButton.x, event.mouseButton.y)));
+                Point cursorPoint(Point::ctd(Point(event.mouseButton.x, event.mouseButton.y)));
 
                 if (currentMode == DRAWING)
                 {
@@ -76,6 +77,7 @@ int main()
                 else if(currentMode == VERTEX_INSERTING)
                 {
                     polygonVertexInsertingEditor->mouseClickHandler(cursorPoint);
+                    // delete polygonVertexInsertingEditor;
                 }
             }
         }

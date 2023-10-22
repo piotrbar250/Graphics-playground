@@ -1,36 +1,8 @@
-Line.hpp
-#pragma once
-#include <SFML/Graphics.hpp>
-#include "Point.hpp"
-#include <chrono>
-#include <thread>
-using namespace std;
-using namespace sf;
-
-class Line
-{
-public:
-    float A, B, C;
-    bool isVertical;
-    Point verticalVector;
-    Segment segment;
-
-    Line(const Point& a, const Point& b);
-
-    float getY(float x) const;
-    Vertex* vertexesOnLine() const;
-    void draw() const;
-    float dis(const Point& p) const;
-    Line parallelLine(float offset);
-};
-
-Point.hpp:
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "global.hpp"
-#include "include.hpp"
 
 class Line;
 

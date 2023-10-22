@@ -3,8 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "global.hpp"
-#include "Polygon.cpp"
-#include "Render.cpp"
+#include "Polygon.hpp"
+#include "Render.hpp"
 
 using namespace std;
 using namespace sf;
@@ -77,7 +77,7 @@ public:
         if (drawingStarted)
         {
             // adding a temporary segment
-            Point cursorPoint(ctd(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
+            Point cursorPoint(dtc(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
 
             // after first iteration there is no previous temporary segment
             if (firstIterationAfterClicking)

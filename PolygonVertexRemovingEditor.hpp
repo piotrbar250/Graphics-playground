@@ -3,8 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "global.hpp"
-#include "Polygon.cpp"
-#include "Render.cpp"
+#include "Polygon.hpp"
+#include "Render.hpp"
 
 using namespace std;
 using namespace sf;

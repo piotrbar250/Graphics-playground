@@ -16,6 +16,7 @@ enum Mode {
 const int M = 1152, N = 720;
 const float radius = 10;
 const float thickness = 6;
+const float eps = thickness/2;
 extern RenderWindow window;
 extern Mode currentMode; 
 
@@ -59,4 +60,73 @@ It's not a reference assignment; the two vectors don't share the same underlying
 
 /*
 returning reference to the local variable
+*/
+
+/*
+
+Yes, you can avoid creating Point.cpp by restructuring your code to prevent calling methods of the Line class directly in the Point class header.
+
+One way to achieve this is by using a function pointer or a lambda function. Here's an approach using a lambda function:
+
+Modify the pointOnLine method to accept a lambda function.
+The caller will pass the lambda which calls the method of the Line class.
+Here's how you can implement it:
+
+Point.hpp:
+
+cpp
+Copy code
+#ifndef POINT_HPP
+#define POINT_HPP
+
+#include <iostream>
+#include <functional>
+
+class Point
+{
+public:
+    float x, y;
+    Point(float x, float y) : x(x), y(y) {}
+
+    void print()
+    {
+        std::cout << x << " " << y;
+    }
+
+    void pointOnLine(const std::function<void()>& fun)
+    {
+        fun();
+    }
+};
+
+#endif
+main.cpp:
+
+cpp
+Copy code
+#include <iostream>
+#include "Point.hpp"
+#include "Line.hpp"
+using namespace std;
+
+int main()
+{
+    // Example to call the pointOnLine with a lambda
+    Point p(5, 3);
+    Line l;
+
+    p.pointOnLine([&]() {
+        l.someFun();
+    });
+
+    l.print();
+
+    cout << endl;
+}
+In this approach:
+
+The pointOnLine method of the Point class accepts a lambda function (or any callable).
+When you want a Point to invoke a method on a Line, you pass the method wrapped inside a lambda to pointOnLine.
+With this setup, there's no need for Point to know about Line methods directly, thus eliminating the cyclic dependency without adding a Point.cpp.
+
 */

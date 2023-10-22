@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "Point.cpp"
+#include "Point.hpp"
 #include "global.hpp"
 using namespace std;
 using namespace sf;
