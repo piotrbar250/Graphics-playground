@@ -16,6 +16,7 @@ public:
     Polygon *selectedPolygon;
     Render &render;
     Point origin;
+    Segment currentHorizontalSegment;
     vector<Point> orignalVertexes;
     vector<Segment> orignalSegments;
 
@@ -25,83 +26,68 @@ public:
     {
         if (!movingStarted)
         {
-            // std::cout << "tu tylko na poczatku" << std::endl;
             movingStarted = true;
-            render.tmpSegment = new Segment(cursorPoint, {M, cursorPoint.y});
+            currentHorizontalSegment = Segment(cursorPoint, {M, cursorPoint.y});
             origin = cursorPoint;
+            selectedPolygon = nullptr;
 
-            int cnt = 0;
-            int i = 0;
-            for (Polygon *&polygon : render.polygons)
-            {
-                int j = 0;
-                for (Segment &segment : polygon->segments)
-                {
-                    if (segment.intersect(*render.tmpSegment))
-                    {
-                        cnt++;
-                        // cout << "o tak " << i << " " << j << endl;
-                    }
-                    j++;
-                }
-                if (cnt % 2 == 1)
-                {
-                    selectedPolygon = polygon;
-                    orignalVertexes = polygon->vertexes;
-                    orignalSegments = polygon->segments;
-                    break;
-                }
-                i++;
-            }
-            if(!selectedPolygon)
-            {
-                movingStarted = false;
-                currentMode = DRAWING;
-            }
+            findPolygon(cursorPoint);
+
+            if (!selectedPolygon)
+                finishEditing();
         }
         else
         {
-            Point cursorPoint(dtc(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
-
-            vector<Point> tmpVertexes;
-            for(Point& vertex: orignalVertexes)
-            {
-                tmpVertexes.push_back(vertex + (cursorPoint - origin));
-                // tmpVertexes.push_back(vertex*2);
-            }
-            selectedPolygon->vertexes = tmpVertexes;
-            vector<Segment> tmpSegments;
-            for(Segment& segment: orignalSegments)
-            {
-                tmpSegments.push_back(Segment(Point(segment.b+(cursorPoint - origin)), Point(segment.e+(cursorPoint - origin))));
-            }
-            selectedPolygon->segments = tmpSegments;
-
-            movingStarted = false;
-            currentMode = DRAWING;
+            saveCurrentPolygon();
+            finishEditing();
         }
     }
 
     void temporaryPolygonHandler()
     {
-        if(movingStarted)
-        {
-            // cout << "co jest" << endl;
-            Point cursorPoint(dtc(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
+        if (movingStarted)
+            saveCurrentPolygon();
+    }
 
-            vector<Point> tmpVertexes;
-            for(Point& vertex: orignalVertexes)
+    void findPolygon(const Point &cursorPoint)
+    {
+        int cnt = 0;
+        for (Polygon *&polygon : render.polygons)
+        {
+            for (Segment &segment : polygon->segments)
             {
-                tmpVertexes.push_back(vertex + (cursorPoint - origin));
-                // tmpVertexes.push_back(vertex*2);
+                if (segment.intersect(currentHorizontalSegment))
+                    cnt++;
             }
-            selectedPolygon->vertexes = tmpVertexes;
-            vector<Segment> tmpSegments;
-            for(Segment& segment: orignalSegments)
+            if (cnt % 2 == 1)
             {
-                tmpSegments.push_back(Segment(Point(segment.b+(cursorPoint - origin)), Point(segment.e+(cursorPoint - origin))));
+                selectedPolygon = polygon;
+                orignalVertexes = polygon->vertexes;
+                orignalSegments = polygon->segments;
+                break;
             }
-            selectedPolygon->segments = tmpSegments;
         }
+    }
+
+    void saveCurrentPolygon()
+    {
+        Point cursorPoint(dtc(Point(Mouse::getPosition(window).x, Mouse::getPosition(window).y)));
+
+        vector<Point> tmpVertexes;
+        for (Point &vertex : orignalVertexes)
+            tmpVertexes.push_back(vertex + (cursorPoint - origin));
+
+        selectedPolygon->vertexes = tmpVertexes;
+        vector<Segment> tmpSegments;
+        for (Segment &segment : orignalSegments)
+            tmpSegments.push_back(Segment(Point(segment.b + (cursorPoint - origin)), Point(segment.e + (cursorPoint - origin))));
+
+        selectedPolygon->segments = tmpSegments;
+    }
+
+    void finishEditing()
+    {
+        movingStarted = false;
+        currentMode = DRAWING;
     }
 };

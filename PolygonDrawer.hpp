@@ -9,6 +9,7 @@
 using namespace std;
 using namespace sf;
 
+// proper pointers init !!!!!
 class PolygonDrawer
 {
 public:

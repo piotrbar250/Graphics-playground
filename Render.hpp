@@ -14,9 +14,7 @@ class Render
 public:
     vector<Polygon*> polygons;
     vector<Line> lines;
-
-    Segment* tmpSegment = nullptr;
-
+    
     Render() : polygons(vector<Polygon*>()) {}
 
     void drawPoint(const Point& p)
@@ -69,13 +67,10 @@ public:
             drawCircle(p);
         }
 
-        for(auto& l: lines)
-        {
-            drawLine(l);
-        }
-
-        if(tmpSegment)
-            drawSegment(*tmpSegment);
+        // for(auto& l: lines)
+        // {
+        //     drawLine(l);
+        // }
     }
 
     void addPolygon(Polygon* polygon)

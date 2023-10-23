@@ -56,6 +56,7 @@ class Segment
 public:
     Point b, e;
 
+    Segment() {}
     Segment(const Point& b, const Point& e) : b(b.x, b.y), e(e.x, e.y)
     {}
 
