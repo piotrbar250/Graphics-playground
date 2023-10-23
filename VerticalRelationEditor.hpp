@@ -72,6 +72,12 @@ public:
                 adjustSegment(segment);
             }
         }
+
+        if(!(polygon->segments[polygon->segments.size()-1].e == polygon->segments[0].b))
+        {
+            polygon->segments[0].b = polygon->segments[polygon->segments.size()-1].e;
+            polygon->vertexes[0] = polygon->segments[0].b;
+        }
     }
 
     void adjustPlain(PolygonDrawer& polygonDrawer)
