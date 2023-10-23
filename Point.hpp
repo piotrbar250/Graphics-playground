@@ -5,6 +5,7 @@
 #include "global.hpp"
 
 class Line;
+class Polygon;
 
 using namespace std;
 using namespace sf;
@@ -20,6 +21,7 @@ public:
     Point transform(const Point& v);
 
     float dot(const Point& v);
+    float det(const Point& v) const;
 
     float norm();
     Point normalised();
@@ -34,12 +36,17 @@ public:
     
     Point operator+(const Point& p) const;
 
+    Point operator-(const Point& p) const;
+
+    bool operator==(const Point& p);
+
+    bool vectorIntersection(const Point& p) const;
+
     bool pointInCircle(const Point& p);
 
     bool pointOnLine(const Line& l) const;
 
-    bool operator==(const Point& p);
-
+    bool pointInPolygon(const Polygon* polygon);
 
     void drawCircle();
 };
@@ -55,5 +62,21 @@ public:
     bool operator ==(const Segment& p)
     {
         return b == p.b and e == p.e;
+    }
+
+    bool intersect(const Segment& s)
+    {
+        Point ab = e - b;
+        Point v1 = s.b - b;
+        Point v2 = s.e - b;
+        if(ab.det(v1) * ab.det(v2) >= 0)
+            return false;
+        
+        ab = s.e - s.b;
+        v1 = b - s.b;
+        v2 = e - s.b;
+        if(ab.det(v1) * ab.det(v2) >= 0)
+            return false;
+        return true;
     }
 };

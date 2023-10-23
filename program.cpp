@@ -10,6 +10,7 @@
 #include "PolygonEditor.hpp"
 #include "PolygonVertexRemovingEditor.hpp"
 #include "PolygonVertexInsertingEditor.hpp"
+#include "PolygonMovingEditor.hpp"
 
 using namespace std;
 using namespace sf;
@@ -29,6 +30,7 @@ int main()
     PolygonEditor* polygonEditor = new PolygonEditor(render);
     PolygonVertexRemovingEditor* polygonVertexRemovingEditor;
     PolygonVertexInsertingEditor* polygonVertexInsertingEditor;
+    PolygonMovingEditor* polygonMovingEditor;
 
     bool polygonStarted = false;
 
@@ -56,6 +58,11 @@ int main()
                 polygonVertexInsertingEditor = new PolygonVertexInsertingEditor(render);
                 currentMode = VERTEX_INSERTING;
             }
+            if(event.type == Event::KeyPressed and event.key.code == Keyboard::M)
+            {
+                polygonMovingEditor = new PolygonMovingEditor(render);
+                currentMode = POLYGON_MOVING;
+            }
             
 
             if (event.type == Event::MouseButtonPressed)
@@ -79,6 +86,11 @@ int main()
                     polygonVertexInsertingEditor->mouseClickHandler(cursorPoint);
                     // delete polygonVertexInsertingEditor;
                 }
+                else if(currentMode == POLYGON_MOVING)
+                {
+                    polygonMovingEditor->mouseClickHandler(cursorPoint);
+                    // delete polygonVertexInsertingEditor;
+                }
             }
         }
 
@@ -89,6 +101,10 @@ int main()
         else if(currentMode == EDITING)
         {
             polygonEditor->temporarySegmentHanlder();
+        }
+        else if(currentMode == POLYGON_MOVING)
+        {
+            polygonMovingEditor->temporaryPolygonHandler();
         }
 
         window.clear();

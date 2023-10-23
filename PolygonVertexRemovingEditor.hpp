@@ -72,7 +72,7 @@ public:
                 }
             }
 
-            vector<Segment> tmp = vector<Segment>(); // is that needed?
+            vector<Segment> tmp = vector<Segment>(); // is that needed? - NO
             int cnt = 0;
 
             cout << "sasiedzi " << *adjacentSegmentsPoints[0] << " " << *adjacentSegmentsPoints[1] << endl;

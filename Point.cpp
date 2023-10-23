@@ -3,6 +3,7 @@
 #include <cmath>
 #include "Point.hpp"
 #include "Line.hpp"
+#include "Polygon.hpp"
 
 Point::Point() {}
 // Point(float x, float y) : x(x), y(y) {}
@@ -20,6 +21,11 @@ Point Point::transform(const Point &v)
 float Point::dot(const Point &v)
 {
     return x * v.x + y * v.y;
+}
+
+float Point::det(const Point &v) const
+{
+    return x*v.y - v.x*y;
 }
 
 float Point::norm()
@@ -56,6 +62,16 @@ Point Point::operator+(const Point &p) const
     return Point(x + p.x, y + p.y);
 }
 
+Point Point::operator-(const Point &p) const
+{
+    return Point(x - p.x, y - p.y);
+}
+
+bool Point::operator==(const Point &p)
+{
+    return x == p.x and y == p.y;
+}
+
 bool Point::pointInCircle(const Point &p)
 {
     if (sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y)) < radius)
@@ -76,9 +92,9 @@ bool Point::pointOnLine(const Line &l) const
     return true;
 }
 
-bool Point::operator==(const Point &p)
+bool Point::pointInPolygon(const Polygon *polygon)
 {
-    return x == p.x and y == p.y;
+    return false;
 }
 
 void Point::drawCircle()

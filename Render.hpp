@@ -15,6 +15,8 @@ public:
     vector<Polygon*> polygons;
     vector<Line> lines;
 
+    Segment* tmpSegment = nullptr;
+
     Render() : polygons(vector<Polygon*>()) {}
 
     void drawPoint(const Point& p)
@@ -71,6 +73,9 @@ public:
         {
             drawLine(l);
         }
+
+        if(tmpSegment)
+            drawSegment(*tmpSegment);
     }
 
     void addPolygon(Polygon* polygon)
