@@ -23,6 +23,7 @@ public:
 
     void mouseClickHandler(const Point &cursorPoint)
     {
+
         for (Polygon *&polygon : render.polygons)
         {
             for (Point &vertex : polygon->vertexes)
@@ -38,6 +39,8 @@ public:
 
         if (selectedPoint)
         {
+            cout << "Removing is started" << endl;
+            printPolygon();
             for (Segment &segment : selectedPolygon->segments)
             {
                 if (segment.b == *selectedPoint)
@@ -77,28 +80,57 @@ public:
 
             cout << "sasiedzi " << *adjacentSegmentsPoints[0] << " " << *adjacentSegmentsPoints[1] << endl;
 
+            int loopCnt = 0;
             for (Segment &segment : selectedPolygon->segments)
             {
                 if (segment.b == *selectedPoint or segment.e == *selectedPoint)
                 {
                     cout << "usuwam segment " << segment.b << " " << segment.e << endl;
                     if(cnt++ == 0)
-                        tmp.push_back(Segment(*adjacentSegmentsPoints[0], *adjacentSegmentsPoints[1]));
+                    {
+                        if(loopCnt == 0 && segment.b == *selectedPoint)
+                            tmp.push_back(Segment(*adjacentSegmentsPoints[1], *adjacentSegmentsPoints[0]));
+                        else
+                            tmp.push_back(Segment(*adjacentSegmentsPoints[0], *adjacentSegmentsPoints[1]));
+                    }
                 }
                 else
                     tmp.push_back(segment);
+
+                loopCnt++;
             }
             selectedPolygon->segments = tmp;
 
 
+            // vector<Point> tmpP;
+            // for(Point& vertex: selectedPolygon->vertexes)
+            // {
+            //     if(vertex == *selectedPoint)
+            //         continue;
+            //     tmpP.push_back(vertex);
+            // }
+            // selectedPolygon->vertexes = tmpP;
+
             vector<Point> tmpP;
-            for(Point& vertex: selectedPolygon->vertexes)
+            for(Segment& segment: selectedPolygon->segments)
             {
-                if(vertex == *selectedPoint)
-                    continue;
-                tmpP.push_back(vertex);
+                tmpP.push_back(segment.b);
             }
             selectedPolygon->vertexes = tmpP;
+
+            cout << "Removing has been finished" << endl;
+            printPolygon();
         }
+
+        currentMode = DRAWING;
+    }
+
+    void printPolygon()
+    {
+        for (Segment &segment : selectedPolygon->segments)
+            cout << segment.b << " " << segment.e << endl;
+        cout << endl;
+        for (Point &vertex : selectedPolygon->vertexes)
+            cout << vertex << endl;
     }
 };

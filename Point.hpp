@@ -56,8 +56,13 @@ class Segment
 {
 public:
     Point b, e;
-    bool relation1 = false;
-    Button* button1 = nullptr;
+    bool relation1 = false; // poziomoa
+    bool relation2 = false; // pionowa
+    bool relation3 = false; // przylegle
+    Button* button1 = nullptr; // pozioma
+    Button* button2 = nullptr; // pionowa    
+    Button* button3 = nullptr; // przylegle    
+
 
     Segment() {}
     Segment(const Point& b, const Point& e) : b(b.x, b.y), e(e.x, e.y)
@@ -88,5 +93,11 @@ public:
     {
         Point ab = (e - b) * (0.5);
         return b + ab;
+    }
+
+    float len() const
+    {
+        Point ab = e - b;
+        return sqrt(ab.x * ab.x + ab.y * ab.y);
     }
 };

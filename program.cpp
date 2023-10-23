@@ -12,6 +12,7 @@
 #include "PolygonVertexInsertingEditor.hpp"
 #include "PolygonMovingEditor.hpp"
 #include "ButtonDrawer.hpp"
+#include "VerticalRelationEditor.hpp"
 using namespace std;
 using namespace sf;
 
@@ -34,6 +35,7 @@ int main()
 
     ButtonDrawer buttonDrawer(render);
     
+    VerticalRelationEditor VerticalRelationEditor(render);
     // buttonDrawer.createButton();
 
     bool displayRelationMenu = false;
@@ -141,6 +143,9 @@ int main()
             cout << "weszlem " << i++ << endl;
             buttonDrawer.displayRelationMenu();
         }
+
+        VerticalRelationEditor.adjustPlain(polygonDrawer);
+
 
         window.clear();
 

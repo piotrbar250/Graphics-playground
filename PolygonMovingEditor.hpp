@@ -85,6 +85,7 @@ public:
         for(int i = 0; i < orignalSegments.size(); i++)
         {
             tmpSegments[i].relation1 = orignalSegments[i].relation1;
+            tmpSegments[i].relation2 = orignalSegments[i].relation2;
         }
 
         selectedPolygon->segments = tmpSegments;

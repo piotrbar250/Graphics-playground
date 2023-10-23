@@ -44,6 +44,12 @@ public:
         rect.setPosition(Vector2f(dtc(seg.b).x, dtc(seg.b).y));
         rect.rotate(angle_deg);
         rect.setFillColor(Color::Green);
+
+        // RectangleShape rect2(Vector2f(len, 5*thickness));
+        // rect2.setPosition(Vector2f(dtc(seg.b).x, dtc(seg.b).y));
+        // rect2.rotate(angle_deg);
+        // rect2.setFillColor(Color::Magenta);
+        // window.draw(rect2);
         window.draw(rect);
     }
     
