@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "Point.hpp"
+#include "Button.hpp"
 #include "global.hpp"
 using namespace std;
 using namespace sf;
@@ -12,9 +13,9 @@ class Polygon
 public:
     vector<Point> vertexes;
     vector<Segment> segments;
-
-    Point start;
     
+    Point start;
+
     Polygon() : vertexes(vector<Point>()), segments(vector<Segment>()) {}
 
     Polygon(const Point& p) : start(p.x, p.y)

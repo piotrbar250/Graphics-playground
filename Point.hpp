@@ -6,6 +6,7 @@
 
 class Line;
 class Polygon;
+class Button;
 
 using namespace std;
 using namespace sf;
@@ -55,6 +56,8 @@ class Segment
 {
 public:
     Point b, e;
+    bool relation1 = false;
+    Button* button1 = nullptr;
 
     Segment() {}
     Segment(const Point& b, const Point& e) : b(b.x, b.y), e(e.x, e.y)
@@ -79,5 +82,11 @@ public:
         if(ab.det(v1) * ab.det(v2) >= 0)
             return false;
         return true;
+    }
+
+    Point middle()
+    {
+        Point ab = (e - b) * (0.5);
+        return b + ab;
     }
 };

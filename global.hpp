@@ -9,7 +9,8 @@ enum Mode {
     EDITING,
     VERTEX_REMOVING,
     VERTEX_INSERTING,
-    POLYGON_MOVING
+    POLYGON_MOVING,
+    TESTING
 };
 
 
@@ -18,6 +19,10 @@ const int M = 1152, N = 720;
 const float radius = 10;
 const float thickness = 6;
 const float eps = thickness/2;
+
+const Color relationsButtonON = Color::Cyan;
+const Color relationsButtonOFF = Color::Red;
+
 extern RenderWindow window;
 extern Mode currentMode; 
 

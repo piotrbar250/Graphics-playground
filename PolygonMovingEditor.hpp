@@ -82,6 +82,11 @@ public:
         for (Segment &segment : orignalSegments)
             tmpSegments.push_back(Segment(Point(segment.b + (cursorPoint - origin)), Point(segment.e + (cursorPoint - origin))));
 
+        for(int i = 0; i < orignalSegments.size(); i++)
+        {
+            tmpSegments[i].relation1 = orignalSegments[i].relation1;
+        }
+
         selectedPolygon->segments = tmpSegments;
     }
 

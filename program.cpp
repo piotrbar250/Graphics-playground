@@ -11,7 +11,7 @@
 #include "PolygonVertexRemovingEditor.hpp"
 #include "PolygonVertexInsertingEditor.hpp"
 #include "PolygonMovingEditor.hpp"
-
+#include "ButtonDrawer.hpp"
 using namespace std;
 using namespace sf;
 
@@ -32,8 +32,15 @@ int main()
     PolygonVertexInsertingEditor* polygonVertexInsertingEditor;
     PolygonMovingEditor* polygonMovingEditor;
 
+    ButtonDrawer buttonDrawer(render);
+    
+    // buttonDrawer.createButton();
+
+    bool displayRelationMenu = false;
+
     bool polygonStarted = false;
 
+    int i = 0;
     while (window.isOpen())
     {
         Event event;
@@ -63,6 +70,23 @@ int main()
                 polygonMovingEditor = new PolygonMovingEditor(render);
                 currentMode = POLYGON_MOVING;
             }
+            if(event.type == Event::KeyPressed and event.key.code == Keyboard::D)
+            {
+                displayRelationMenu = !displayRelationMenu;
+            }
+            if(event.type == Event::KeyPressed and event.key.code == Keyboard::X)
+            {
+                // polygonMovingEditor = new PolygonMovingEditor(render);
+                if(currentMode == DRAWING)
+                    currentMode = TESTING;
+                else if(currentMode == TESTING)
+                    currentMode = DRAWING;
+                else
+                {
+                    cout << "UNDEFINED BEHAVIOUR" << endl;
+                    return 0;
+                }
+            }
             
 
             if (event.type == Event::MouseButtonPressed)
@@ -91,6 +115,11 @@ int main()
                     polygonMovingEditor->mouseClickHandler(cursorPoint);
                     // delete polygonVertexInsertingEditor;
                 }
+                else if(currentMode == TESTING)
+                {
+                    buttonDrawer.mouseClickHandler(cursorPoint);
+                    // delete polygonVertexInsertingEditor;
+                }
             }
         }
 
@@ -105,6 +134,12 @@ int main()
         else if(currentMode == POLYGON_MOVING)
         {
             polygonMovingEditor->temporaryPolygonHandler();
+        }
+
+        if(displayRelationMenu)
+        {
+            cout << "weszlem " << i++ << endl;
+            buttonDrawer.displayRelationMenu();
         }
 
         window.clear();

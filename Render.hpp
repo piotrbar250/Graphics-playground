@@ -6,6 +6,7 @@
 #include "Polygon.hpp"
 #include "global.hpp"
 #include "Line.hpp"
+#include "Button.hpp"
 using namespace std;
 using namespace sf;
 
@@ -14,7 +15,10 @@ class Render
 public:
     vector<Polygon*> polygons;
     vector<Line> lines;
-    
+    vector<Button> buttons;
+
+    vector<Point> tmpVertexes;
+
     Render() : polygons(vector<Polygon*>()) {}
 
     void drawPoint(const Point& p)
@@ -50,6 +54,11 @@ public:
         window.draw(circle);
     }
 
+    void drawButton(const Button& button)
+    {
+        button.draw();
+    }
+
     void drawLine(const Line& line)
     {
         line.draw();
@@ -67,6 +76,14 @@ public:
             drawCircle(p);
         }
 
+        for(Button& button: buttons)
+        {
+            button.draw();
+        }
+        buttons.clear();
+        
+        // for(auto& p: tmpVertexes)
+        //     drawCircle(p);
         // for(auto& l: lines)
         // {
         //     drawLine(l);
