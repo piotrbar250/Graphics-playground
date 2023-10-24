@@ -22,6 +22,8 @@ public:
     vector<Point> tmpVertexes;
     vector<Segment> tmpSegments;
 
+    vector<VertexArray> sectors;
+
     Render() : polygons(vector<Polygon*>()) {}
 
     void drawPoint(const Point& p)
@@ -55,7 +57,7 @@ public:
 
         rect.setFillColor(Color::Green);
 
-        RectangleShape rect2(Vector2f(len, thickness*4));
+        RectangleShape rect2(Vector2f(len, thickness*5));
         rect2.setPosition(Vector2f(dtc(seg.b).x, dtc(seg.b).y));
         rect2.rotate(angle_deg);
 
@@ -68,6 +70,7 @@ public:
     void drawCircle(const Point& p)
     {
         CircleShape circle(radius);
+        circle.setFillColor(Color::Blue);
         circle.setPosition(Vector2f(dtc(p).x-radius, dtc(p).y-radius));
         window.draw(circle);
     }
@@ -84,14 +87,18 @@ public:
 
     void draw()
     {
+
+        for(auto& sector: sectors)
+            window.draw(sector);
+            
         int i = 0;
         for(auto& polygon: polygons)
         {
             for(auto& seg: polygon->segments)
             drawSegment(seg);
 
-            // for(auto& p: polygon->vertexes)
-            // drawCircle(p);
+            for(auto& p: polygon->vertexes)
+            drawCircle(p);
         }
 
         for(Button& button: buttons)
@@ -109,6 +116,9 @@ public:
 
         for(auto& s: tmpSegments)
             drawSegment(s);
+
+
+            
     }
 
     void addPolygon(Polygon* polygon)

@@ -25,99 +25,99 @@ RenderWindow window;
 Mode currentMode;
 Algorithm currentAlgorithm;
 
-float magnitude(const Point &v)
-{
-    return std::sqrt(v.x * v.x + v.y * v.y);
-}
+// float magnitude(const Point &v)
+// {
+//     return std::sqrt(v.x * v.x + v.y * v.y);
+// }
 
-float dotProduct(const Point &a, const Point &b)
-{
-    return a.x * b.x + a.y * b.y;
-}
+// float dotProduct(const Point &a, const Point &b)
+// {
+//     return a.x * b.x + a.y * b.y;
+// }
 
-float angleBetweenSegments(const Segment &s1, const Segment &s2)
-{
-    // Find the directional vectors
-    Point v1 = {s1.e.x - s1.b.x, s1.e.y - s1.b.y};
-    Point v2 = {s2.e.x - s2.b.x, s2.e.y - s2.b.y};
+// float angleBetweenSegments(const Segment &s1, const Segment &s2)
+// {
+//     // Find the directional vectors
+//     Point v1 = {s1.e.x - s1.b.x, s1.e.y - s1.b.y};
+//     Point v2 = {s2.e.x - s2.b.x, s2.e.y - s2.b.y};
 
-    // Calculate the dot product and magnitudes
-    float dot = dotProduct(v1, v2);
-    float mag1 = magnitude(v1);
-    float mag2 = magnitude(v2);
+//     // Calculate the dot product and magnitudes
+//     float dot = dotProduct(v1, v2);
+//     float mag1 = magnitude(v1);
+//     float mag2 = magnitude(v2);
 
-    // Calculate the cosine of the angle
-    float cosTheta = dot / (mag1 * mag2);
+//     // Calculate the cosine of the angle
+//     float cosTheta = dot / (mag1 * mag2);
 
-    // Return the angle in radians
-    return std::acos(cosTheta);
-}
+//     // Return the angle in radians
+//     return std::acos(cosTheta);
+// }
 
-float signedAngleBetweenSegments(const Segment &s1, const Segment &s2)
-{
-    Point v1 = {s1.e.x - s1.b.x, s1.e.y - s1.b.y};
-    Point v2 = {s2.e.x - s2.b.x, s2.e.y - s2.b.y};
+// float signedAngleBetweenSegments(const Segment &s1, const Segment &s2)
+// {
+//     Point v1 = {s1.e.x - s1.b.x, s1.e.y - s1.b.y};
+//     Point v2 = {s2.e.x - s2.b.x, s2.e.y - s2.b.y};
 
-    // Calculate the determinant
-    float determinant = v1.x * v2.y - v1.y * v2.x;
-    float dot = dotProduct(v1, v2);
-    float angleRad = std::atan2(determinant, dot);
+//     // Calculate the determinant
+//     float determinant = v1.x * v2.y - v1.y * v2.x;
+//     float dot = dotProduct(v1, v2);
+//     float angleRad = std::atan2(determinant, dot);
 
-    // Make sure the angle is positive
-    if (angleRad < 0)
-    {
-        angleRad += 2 * M_PI;
-    }
+//     // Make sure the angle is positive
+//     if (angleRad < 0)
+//     {
+//         angleRad += 2 * M_PI;
+//     }
 
-    return angleRad;
-}
+//     return angleRad;
+// }
 
-float angleABC(const Point &A, const Point &B, const Point &C)
-{
-    // Create vectors BA and BC
-    Point BA = {A.x - B.x, A.y - B.y};
-    Point BC = {C.x - B.x, C.y - B.y};
+// float angleABC(const Point &A, const Point &B, const Point &C)
+// {
+//     // Create vectors BA and BC
+//     Point BA = {A.x - B.x, A.y - B.y};
+//     Point BC = {C.x - B.x, C.y - B.y};
 
-    // Calculate dot product and magnitudes
-    float dot = dotProduct(BA, BC);
-    float magBA = magnitude(BA);
-    float magBC = magnitude(BC);
+//     // Calculate dot product and magnitudes
+//     float dot = dotProduct(BA, BC);
+//     float magBA = magnitude(BA);
+//     float magBC = magnitude(BC);
 
-    // Calculate cosine of angle
-    float cosTheta = dot / (magBA * magBC);
+//     // Calculate cosine of angle
+//     float cosTheta = dot / (magBA * magBC);
 
-    // Return angle in radians
-    return std::acos(cosTheta);
-}
+//     // Return angle in radians
+//     return std::acos(cosTheta);
+// }
 
-float angleWithHorizontal(const Point& A, const Point& B) {
-    // Check for vertical line
-    if (A.x == B.x) {
-        return M_PI / 2; // 90 degrees in radians
-    }
+// float angleWithHorizontal(const Point& A, const Point& B) {
+//     // Check for vertical line
+//     if (A.x == B.x) {
+//         return M_PI / 2; // 90 degrees in radians
+//     }
 
-    // Calculate slope
-    float m = (B.y - A.y) / (B.x - A.x);
+//     // Calculate slope
+//     float m = (B.y - A.y) / (B.x - A.x);
 
-    // Return angle in radians
-    return std::atan(m);
-}
+//     // Return angle in radians
+//     return std::atan(m);
+// }
 
 
-//------
-float clockwiseAngle(const Point& v, const Point& u) {
-    float dotProduct = v.dot(u);
-    float crossProduct = v.cross(u);
+// //------
+// float clockwiseAngle(const Point& v, const Point& u) {
+//     float dotProduct = v.dot(u);
+//     float crossProduct = v.cross(u);
 
-    // Angle in radians
-    float angle = std::acos(dotProduct / (v.magnitude() * u.magnitude()));
+//     // Angle in radians
+//     float angle = std::acos(dotProduct / (v.magnitude() * u.magnitude()));
 
-    // Convert to degrees
-    float angleInDegrees = angle * 180.0 / M_PI;
+//     // Convert to degrees
+//     float angleInDegrees = angle * 180.0 / M_PI;
 
-    // If cross product is negative, return the angle, else return 360 - angle
-    return (crossProduct < 0) ? angleInDegrees : 360.0 - angleInDegrees;
-}
+//     // If cross product is negative, return the angle, else return 360 - angle
+//     return (crossProduct < 0) ? angleInDegrees : 360.0 - angleInDegrees;
+// }
 
 int main()
 {
@@ -264,9 +264,11 @@ int main()
         verticalRelationEditor.adjustPlain(polygonDrawer);
         horizontalRelationEditor.adjustPlain(polygonDrawer);
         adjacentEdgesRelationEditor.adjustPlain(polygonDrawer);
+        createCircularSectors(render);
         window.clear();
 
         render.draw();
+
 
         // // Point p4 = {100, 100};
         // // Point p3 = {200, 650};
@@ -306,7 +308,7 @@ int main()
 
         // // VertexArray sector = createCircularSector(30, clockwiseAngle(v, u), 360-angleDeg, Vector2f(B.x, N-B.y));
         // // VertexArray sector = createCircularSector(10.f, clockwiseAngle(v, u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
-        // VertexArray sector = createCircularSector(10.f, clockwiseAngle(v,u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
+        // VertexArray sector = calculateCircularSector(10.f, clockwiseAngle(v,u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
 
         // window.draw(sector);
  
@@ -321,8 +323,6 @@ int main()
 
 
 
-
         window.display();
-        window.clear();
     }
 }
