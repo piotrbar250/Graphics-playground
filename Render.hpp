@@ -90,7 +90,7 @@ public:
 
         for(auto& sector: sectors)
             window.draw(sector);
-            
+
         int i = 0;
         for(auto& polygon: polygons)
         {
@@ -116,8 +116,6 @@ public:
 
         for(auto& s: tmpSegments)
             drawSegment(s);
-
-
             
     }
 
