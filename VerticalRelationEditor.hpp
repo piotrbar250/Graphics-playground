@@ -63,7 +63,6 @@ public:
             Segment& segment = polygon->segments[i];
             if(i > 0 and !(segment.b == polygon->segments[i-1].e))
             {
-                // cout << "wtf" << endl;
                 segment.b = polygon->segments[i-1].e;
             }
             polygon->vertexes[i] = segment.b;

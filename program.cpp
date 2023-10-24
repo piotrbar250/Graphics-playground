@@ -13,6 +13,8 @@
 #include "PolygonMovingEditor.hpp"
 #include "ButtonDrawer.hpp"
 #include "VerticalRelationEditor.hpp"
+#include "HorizontalRelationEditor.hpp"
+#include "AdjacentEdgesRelationEditor.hpp"
 using namespace std;
 using namespace sf;
 
@@ -35,7 +37,9 @@ int main()
 
     ButtonDrawer buttonDrawer(render);
     
-    VerticalRelationEditor VerticalRelationEditor(render);
+    VerticalRelationEditor verticalRelationEditor(render);
+    HorizontalRelationEditor horizontalRelationEditor(render);
+    AdjacentEdgesRelationEditor adjacentEdgesRelationEditor(render);
     // buttonDrawer.createButton();
 
     bool displayRelationMenu = false;
@@ -144,9 +148,10 @@ int main()
             buttonDrawer.displayRelationMenu();
         }
 
-        VerticalRelationEditor.adjustPlain(polygonDrawer);
-
-
+        // adjacentEdgesRelationEditor.adjustRelations(polygonDrawer);
+        verticalRelationEditor.adjustPlain(polygonDrawer);
+        horizontalRelationEditor.adjustPlain(polygonDrawer);
+        adjacentEdgesRelationEditor.adjustPlain(polygonDrawer);
         window.clear();
 
         render.draw();

@@ -100,4 +100,14 @@ public:
         Point ab = e - b;
         return sqrt(ab.x * ab.x + ab.y * ab.y);
     }
+
+    bool isVertical()
+    {
+        return b.x == e.x;
+    }
+
+    bool isHorizontal()
+    {
+        return b.y == e.y;
+    }
 };

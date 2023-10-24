@@ -35,6 +35,10 @@ public:
                 {
                     segment.relation2 = !segment.relation2;
                 }
+                if(segment.button3->isMouseOver(cursorPoint))
+                {
+                    segment.relation3 = !segment.relation3;
+                }
             }
         }
     }

@@ -86,6 +86,7 @@ public:
         {
             tmpSegments[i].relation1 = orignalSegments[i].relation1;
             tmpSegments[i].relation2 = orignalSegments[i].relation2;
+            tmpSegments[i].relation3 = orignalSegments[i].relation3;
         }
 
         selectedPolygon->segments = tmpSegments;
