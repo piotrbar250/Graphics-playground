@@ -18,10 +18,10 @@ Point Point::transform(const Point &v)
     return Point(x + v.x, y + v.y);
 }
 
-float Point::dot(const Point &v)
-{
-    return x * v.x + y * v.y;
-}
+// float Point::dot(const Point &v)
+// {
+//     return x * v.x + y * v.y;
+// }
 
 float Point::det(const Point &v) const
 {

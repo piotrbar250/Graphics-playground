@@ -1,87 +1,14 @@
-Line.hpp
-#pragma once
-#include <SFML/Graphics.hpp>
-#include "Point.hpp"
-#include <chrono>
-#include <thread>
-using namespace std;
-using namespace sf;
-
-class Line
-{
-public:
-    float A, B, C;
-    bool isVertical;
-    Point verticalVector;
-    Segment segment;
-
-    Line(const Point& a, const Point& b);
-
-    float getY(float x) const;
-    Vertex* vertexesOnLine() const;
-    void draw() const;
-    float dis(const Point& p) const;
-    Line parallelLine(float offset);
-};
-
-Point.hpp:
-#pragma once
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <cmath>
-#include "global.hpp"
-#include "include.hpp"
-
-class Line;
-
-using namespace std;
-using namespace sf;
-
-
-class Point
-{
+We have:
+class Point{
 public:
     float x, y;
-    Point();
-    Point(float x, float y);
-
-    Point transform(const Point& v);
-
-    float dot(const Point& v);
-
-    float norm();
-    Point normalised();
-
-    friend Point dtc(const Point& p);
-
-    static Point ctd(const Point& p);
-
-    friend ostream& operator <<(ostream& os, const Point& p);
-
-    Point operator*(float len);
-    
-    Point operator+(const Point& p) const;
-
-    bool pointInCircle(const Point& p);
-
-    bool pointOnLine(const Line& l) const;
-
-    bool operator==(const Point& p);
-
-
-    void drawCircle();
 };
 
-class Segment
-{
+class Segment{
 public:
     Point b, e;
+    Segment(Point b, Point e) : b(b), e(e) {}
+}
 
-    Segment(const Point& b, const Point& e) : b(b.x, b.y), e(e.x, e.y)
-    {}
-
-    bool operator ==(const Segment& p)
-    {
-        return b == p.b and e == p.e;
-    }
-};
+We have two adjacent segments: segment1 and segment2 that segment1.e == segment2.B
+Calculate the angle from segment1 to segment2

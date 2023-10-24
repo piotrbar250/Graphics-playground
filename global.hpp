@@ -13,19 +13,25 @@ enum Mode {
     TESTING
 };
 
+enum Algorithm{
+    LIBRARY,
+    NAIVE,
+    BRESENHAM
+};
+
 
 // extern int M = 1152, N = 720; // const ?? 
 const int M = 1152, N = 720;
 const float radius = 10;
-const float thickness = 6;
-const float eps = thickness/2;
+const float thickness = 6; // 6;
+const float eps = thickness/2.0f;
 
 const Color relationsButtonON = Color::Cyan;
 const Color relationsButtonOFF = Color::Red;
 
 extern RenderWindow window;
 extern Mode currentMode; 
-
+extern Algorithm currentAlgorithm;
 
 // add singleton
 /*

@@ -266,58 +266,58 @@ int main()
         adjacentEdgesRelationEditor.adjustPlain(polygonDrawer);
         window.clear();
 
-        render.draw();
+        // render.draw();
 
-        // // Point p4 = {100, 100};
-        // // Point p3 = {200, 650};
-        // // Point p2 = {200, 650};
-        // // Point p1 = {500, 100};
+        Point p4 = {100, 100};
+        Point p3 = {200, 650};
+        Point p2 = {200, 650};
+        Point p1 = {500, 100};
 
         // Point p1 = {100, 100};
         // Point p2 = {500, 100};
         // Point p3 = {500, 100};
-        // Point p4 = {700, 400};
-        // Segment segment1(p1, p2);
-        // Segment segment2(p3, p4);
+        // Point p4 = {400, 400};
+        Segment segment1(p1, p2);
+        Segment segment2(p3, p4);
 
-        // BresenhamDrawingLineAlgorithm::drawLine(p1, p2, thickness);
-        // BresenhamDrawingLineAlgorithm::drawLine(p3, p4, thickness);
+        BresenhamDrawingLineAlgorithm::drawLine(p1, p2, thickness);
+        BresenhamDrawingLineAlgorithm::drawLine(p3, p4, thickness);
 
 
-        // Point A = p1;
-        // Point B = p2; // Also p3
-        // Point C = p4;
+        Point A = p1;
+        Point B = p2; // Also p3
+        Point C = p4;
 
-        // float angleRad = angleABC(A, B, C);
+        float angleRad = angleABC(A, B, C);
 
-        // // Convert angle from radians to degrees if needed
+        // Convert angle from radians to degrees if needed
+        float angleDeg = angleRad * (180.0f / M_PI);
+
+        // Print the angle in degrees
+        std::cout << "Angle ABC in degrees: " << 360 - angleDeg << std::endl;
+
+        Point ab = p4 - p3;
+        Point u = p4 - p3;
+        Point v(1,0);
+
+
+        cout << "v: " << v << endl; 
+        std::cout << "Clockwise angle between vectors: " << clockwiseAngle(v, u) << " degrees" << std::endl;
+
+        // VertexArray sector = createCircularSector(30, clockwiseAngle(v, u), 360-angleDeg, Vector2f(B.x, N-B.y));
+        // VertexArray sector = createCircularSector(10.f, clockwiseAngle(v, u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
+        VertexArray sector = createCircularSector(10.f, clockwiseAngle(v,u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
+
+        window.draw(sector);
+ 
+        // float angleRad = signedAngleBetweenSegments(segment1, segment2);
+
+        // Convert angle from radians to degrees if needed
         // float angleDeg = angleRad * (180.0f / M_PI);
 
-        // // Print the angle in degrees
-        // std::cout << "Angle ABC in degrees: " << 360 - angleDeg << std::endl;
-
-        // Point ab = p4 - p3;
-        // Point u = p4 - p3;
-        // Point v(1,0);
-
-
-        // cout << "v: " << v << endl; 
-        // std::cout << "Clockwise angle between vectors: " << clockwiseAngle(v, u) << " degrees" << std::endl;
-
-        // // VertexArray sector = createCircularSector(30, clockwiseAngle(v, u), 360-angleDeg, Vector2f(B.x, N-B.y));
-        // // VertexArray sector = createCircularSector(10.f, clockwiseAngle(v, u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
-        // VertexArray sector = createCircularSector(10.f, clockwiseAngle(v,u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
-
-        // window.draw(sector);
- 
-        // // float angleRad = signedAngleBetweenSegments(segment1, segment2);
-
-        // // Convert angle from radians to degrees if needed
-        // // float angleDeg = angleRad * (180.0f / M_PI);
-
-        // // Print the angle in degrees
-        // // std::cout << "Angle in degrees: " << angleDeg << " " << 360 - angleDeg << std::endl;
-        // // returns Angle in degrees: 108.435 251.565 which is clearly wrong - one degree is below 90
+        // Print the angle in degrees
+        // std::cout << "Angle in degrees: " << angleDeg << " " << 360 - angleDeg << std::endl;
+        // returns Angle in degrees: 108.435 251.565 which is clearly wrong - one degree is below 90
 
 
 

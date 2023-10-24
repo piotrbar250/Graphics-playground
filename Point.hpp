@@ -21,8 +21,22 @@ public:
 
     Point transform(const Point& v);
 
-    float dot(const Point& v);
+    // float dot(const Point& v);
     float det(const Point& v) const;
+
+    float magnitude() const {
+        return std::sqrt(x*x + y*y);
+    }
+
+    // Dot product of two vectors
+    float dot(const Point& other) const {
+        return x * other.x + y * other.y;
+    }
+
+    // Cross product of two vectors
+    float cross(const Point& other) const {
+        return x * other.y - y * other.x;
+    }
 
     float norm();
     Point normalised();

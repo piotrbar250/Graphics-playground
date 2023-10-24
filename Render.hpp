@@ -7,6 +7,8 @@
 #include "global.hpp"
 #include "Line.hpp"
 #include "Button.hpp"
+#include "BresenhamDrawingLineAlgorithm.hpp"
+#include "NaiveDrawingLineAlgorithm.hpp"
 using namespace std;
 using namespace sf;
 
@@ -18,6 +20,7 @@ public:
     vector<Button> buttons;
 
     vector<Point> tmpVertexes;
+    vector<Segment> tmpSegments;
 
     Render() : polygons(vector<Polygon*>()) {}
 
@@ -30,6 +33,12 @@ public:
 
     void drawSegment(const Segment& seg)
     {
+        if(currentAlgorithm == BRESENHAM)
+        {
+            BresenhamDrawingLineAlgorithm::drawLine(seg.b, seg.e, thickness);
+            return;
+        }
+
         float x1 = seg.b.x;
         float y1 = seg.b.y;
 
@@ -43,13 +52,16 @@ public:
         RectangleShape rect(Vector2f(len, thickness));
         rect.setPosition(Vector2f(dtc(seg.b).x, dtc(seg.b).y));
         rect.rotate(angle_deg);
+
         rect.setFillColor(Color::Green);
 
-        // RectangleShape rect2(Vector2f(len, 5*thickness));
-        // rect2.setPosition(Vector2f(dtc(seg.b).x, dtc(seg.b).y));
-        // rect2.rotate(angle_deg);
-        // rect2.setFillColor(Color::Magenta);
-        // window.draw(rect2);
+        RectangleShape rect2(Vector2f(len, thickness*4));
+        rect2.setPosition(Vector2f(dtc(seg.b).x, dtc(seg.b).y));
+        rect2.rotate(angle_deg);
+
+        rect2.setFillColor(Color::White);
+
+        window.draw(rect2);
         window.draw(rect);
     }
     
@@ -78,8 +90,8 @@ public:
             for(auto& seg: polygon->segments)
             drawSegment(seg);
 
-            for(auto& p: polygon->vertexes)
-            drawCircle(p);
+            // for(auto& p: polygon->vertexes)
+            // drawCircle(p);
         }
 
         for(Button& button: buttons)
@@ -94,6 +106,9 @@ public:
         // {
         //     drawLine(l);
         // }
+
+        for(auto& s: tmpSegments)
+            drawSegment(s);
     }
 
     void addPolygon(Polygon* polygon)
