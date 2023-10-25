@@ -5,6 +5,8 @@
 #include "Render.hpp"
 #include <cmath>
 
+using namespace sf;
+
 float magnitude(const Point &v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y);
@@ -49,10 +51,10 @@ float clockwiseAngle(const Point& v, const Point& u) {
     return (crossProduct < 0) ? angleInDegrees : 360.0 - angleInDegrees;
 }
 
-sf::VertexArray calculateCircularSector(float radius, float startAngle, float arcAngle, sf::Vector2f position) {
+VertexArray calculateCircularSector(float radius, float startAngle, float arcAngle, Vector2f position) {
     const int points = 50;
     
-    sf::VertexArray sector(sf::TriangleFan, points + 2);
+    VertexArray sector(TriangleFan, points + 2);
     sector[0].position = position;
 
     for (int i = 1; i <= points + 1; ++i) {
@@ -61,7 +63,7 @@ sf::VertexArray calculateCircularSector(float radius, float startAngle, float ar
         float x = position.x + radius * cos(theta);
         float y = position.y + radius * sin(theta);
 
-        sector[i].position = sf::Vector2f(x, y);
+        sector[i].position = Vector2f(x, y);
         sector[i].color = Color::White;
     }
     
@@ -84,8 +86,8 @@ VertexArray createCircularSector(Segment segment1, Segment segment2, float local
 
 
     if(!isRightTurn(segment1,segment2))
-        return calculateCircularSector(local_thickness, clockwiseAngle(v,u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
-    return calculateCircularSector(local_thickness, clockwiseAngle(v,u) * (3.14159265f / 180.f), (angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
+        return calculateCircularSector(local_thickness, clockwiseAngle(v,u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), Vector2f(B.x, N-B.y));
+    return calculateCircularSector(local_thickness, clockwiseAngle(v,u) * (3.14159265f / 180.f), (angleDeg) * (3.14159265f / 180.f), Vector2f(B.x, N-B.y));
 }
 
 void createCircularSectors(Render& render)

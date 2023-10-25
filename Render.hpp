@@ -286,10 +286,13 @@ public:
         line.draw();
     }
 
-    void draw()
+    void draw(bool displayOffset)
     {
-        for (auto &sector : sectors)
-            window.draw(sector);
+        if(displayOffset)
+        {
+            for (auto &sector : sectors)
+                window.draw(sector);
+        }
 
         int i = 0;
         for (auto &polygon : polygons)
@@ -298,9 +301,12 @@ public:
                 prepareSegments(seg);
         }
 
-        for (RectangleShape &rect : offsetRecatngles)
-            window.draw(rect);
-        offsetRecatngles.clear();
+        if(displayOffset)
+        {
+            for (RectangleShape &rect : offsetRecatngles)
+                window.draw(rect);
+            offsetRecatngles.clear();
+        }
 
         for (RectangleShape &rect : segmentRectangles)
             window.draw(rect);

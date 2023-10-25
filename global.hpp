@@ -27,6 +27,7 @@ const float radius = 10;
 const float thickness = 6;
 extern float offsetThickness; // 6;
 const float eps = thickness/2.0f;
+const bool displayDefault = true; 
 
 const Color relationsButtonON = Color::Cyan;
 const Color relationsButtonOFF = Color::Red;

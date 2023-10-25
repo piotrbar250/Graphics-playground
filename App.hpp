@@ -75,6 +75,8 @@ public:
     {
         window.create(sf::VideoMode(1152, 720), "Polygon editor");
         window.display();
+        if(displayDefault)
+            render.polygons = loadPolygons("../defaultPoligons.txt");
     }
 
     void loop()
@@ -207,8 +209,8 @@ public:
         adjacentEdgesRelationEditor.adjustPlain(polygonDrawer);
         createCircularSectors(render);
         window.clear();
-    
-        render.draw();
+
+        render.draw(!polygonDrawer.drawingStarted);
         slider.draw(window);
 
         window.display();
