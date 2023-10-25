@@ -21,20 +21,19 @@ public:
 
     Point transform(const Point& v);
 
-    // float dot(const Point& v);
     float det(const Point& v) const;
 
     float magnitude() const {
         return std::sqrt(x*x + y*y);
     }
 
-    // Dot product of two vectors
-    float dot(const Point& other) const {
+    float dot(const Point& other) const 
+    {
         return x * other.x + y * other.y;
     }
 
-    // Cross product of two vectors
-    float cross(const Point& other) const {
+    float cross(const Point& other) const 
+    {
         return x * other.y - y * other.x;
     }
 
@@ -77,6 +76,7 @@ public:
     Button* button2 = nullptr; // pionowa    
     Button* button3 = nullptr; // przylegle    
 
+    Point bShifted, eShifted;
 
     Segment() {}
     Segment(const Point& b, const Point& e) : b(b.x, b.y), e(e.x, e.y)

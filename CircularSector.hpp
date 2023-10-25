@@ -82,11 +82,11 @@ VertexArray createCircularSector(Segment segment1, Segment segment2, float local
     Point v(1,0);
     Point u = segment2.e - segment2.b;
 
+
     if(!isRightTurn(segment1,segment2))
         return calculateCircularSector(local_thickness, clockwiseAngle(v,u) * (3.14159265f / 180.f), (360-angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
-    return VertexArray();
+    return calculateCircularSector(local_thickness, clockwiseAngle(v,u) * (3.14159265f / 180.f), (angleDeg) * (3.14159265f / 180.f), sf::Vector2f(B.x, N-B.y));
 }
-
 
 void createCircularSectors(Render& render)
 {

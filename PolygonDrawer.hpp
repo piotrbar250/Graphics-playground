@@ -59,7 +59,7 @@ public:
             delete prevPoint;
             prevPoint = nullptr;
 
-            cout << "Drawing has been finished" << endl;
+            // cout << "Drawing has been finished" << endl;
             printPolygon();
         }
         else
@@ -97,10 +97,10 @@ public:
 
     void printPolygon()
     {
-        for (Segment &segment : polygon->segments)
-            cout << segment.b << " " << segment.e << endl;
-        cout << endl;
-        for (Point &vertex : polygon->vertexes)
-            cout << vertex << endl;
+        // for (Segment &segment : polygon->segments)
+        //     cout << segment.b << " " << segment.e << endl;
+        // cout << endl;
+        // for (Point &vertex : polygon->vertexes)
+        //     cout << vertex << endl;
     }
 };

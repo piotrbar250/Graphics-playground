@@ -39,7 +39,7 @@ public:
 
         if (selectedPoint)
         {
-            cout << "Removing is started" << endl;
+            // cout << "Removing is started" << endl;
             printPolygon();
             for (Segment &segment : selectedPolygon->segments)
             {
@@ -78,14 +78,14 @@ public:
             vector<Segment> tmp = vector<Segment>(); // is that needed? - NO
             int cnt = 0;
 
-            cout << "sasiedzi " << *adjacentSegmentsPoints[0] << " " << *adjacentSegmentsPoints[1] << endl;
+            // cout << "sasiedzi " << *adjacentSegmentsPoints[0] << " " << *adjacentSegmentsPoints[1] << endl;
 
             int loopCnt = 0;
             for (Segment &segment : selectedPolygon->segments)
             {
                 if (segment.b == *selectedPoint or segment.e == *selectedPoint)
                 {
-                    cout << "usuwam segment " << segment.b << " " << segment.e << endl;
+                    // cout << "usuwam segment " << segment.b << " " << segment.e << endl;
                     if(cnt++ == 0)
                     {
                         if(loopCnt == 0 && segment.b == *selectedPoint)
@@ -118,7 +118,7 @@ public:
             }
             selectedPolygon->vertexes = tmpP;
 
-            cout << "Removing has been finished" << endl;
+            // cout << "Removing has been finished" << endl;
             printPolygon();
         }
 
@@ -127,10 +127,10 @@ public:
 
     void printPolygon()
     {
-        for (Segment &segment : selectedPolygon->segments)
-            cout << segment.b << " " << segment.e << endl;
-        cout << endl;
-        for (Point &vertex : selectedPolygon->vertexes)
-            cout << vertex << endl;
+        // for (Segment &segment : selectedPolygon->segments)
+        //     cout << segment.b << " " << segment.e << endl;
+        // cout << endl;
+        // for (Point &vertex : selectedPolygon->vertexes)
+        //     cout << vertex << endl;
     }
 };

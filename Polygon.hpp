@@ -18,10 +18,7 @@ public:
 
     Polygon() : vertexes(vector<Point>()), segments(vector<Segment>()) {}
 
-    Polygon(const Point& p) : start(p.x, p.y)
-    {
-        // vertexes.push_back(Point(p.x, p.y)); // is it needed?
-    }
+    Polygon(const Point& p) : start(p.x, p.y) {}
 
     void addVertex(const Point & p)
     {
@@ -31,7 +28,6 @@ public:
     void addSegment(const Point& b, const Point& e)
     {
         Segment seg({b.x, b.y}, {e.x, e.y});
-        // segments.push_back(({b.x, b.y}, {e.x, e.y})); ?? why
         segments.push_back(seg);
     }
 

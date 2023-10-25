@@ -12,13 +12,8 @@ Line::Line(const Point &a, const Point &b) : segment(a, b)
     B = a.x - b.x;
     C = -A * a.x - B * a.y;
 
-    // segment = Segment(a, b);
     isVertical = B == 0;
     verticalVector = Point(b.y - a.y, a.x - b.x).normalised();
-    //     cout << "Tworze prosta dla punktow " << endl;
-    //     cout << a << " " << b << endl;
-    //     cout << A << " " << B << " " << C << endl;
-    //     cout << "wektor prostopadly: " << verticalVector << endl;
 }
 
 float Line::getY(float x) const
@@ -55,7 +50,10 @@ Line Line::parallelLine(float offset)
 {
     Line parallel(segment.b + verticalVector * offset, segment.e + verticalVector * offset);
 
-    cout << "rownolegla " << parallel.A << " " << parallel.B << " " << parallel.C << endl;
-
     return parallel;
+}
+
+bool Line::above(const Point &p) const
+{
+    return A*p.x + B*p.y + C > 0 ? true : false; 
 }

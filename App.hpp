@@ -21,6 +21,7 @@
 #include "BresenhamDrawingLineAlgorithm.hpp"
 #include "CircularSector.hpp"
 #include "Slider.hpp"
+#include "IO.hpp"
 
 using namespace std;
 using namespace sf;
@@ -131,6 +132,18 @@ public:
             {
                 swapModes(LIBRARY, BRESENHAM);
             }
+            if (event.type == Event::KeyPressed and event.key.code == Keyboard::W)
+            {
+                swapModes(LIBRARY, WU);
+            }
+            if (event.type == Event::KeyPressed and event.key.code == Keyboard::Z)
+            {
+                savePolygons(render.polygons, "../poligons.txt");
+            }
+            if (event.type == Event::KeyPressed and event.key.code == Keyboard::L)
+            {
+                render.polygons = loadPolygons("../poligons.txt");
+            }
 
             slider.handleEvent(event);
             if (event.type == Event::MouseButtonPressed)
@@ -194,7 +207,7 @@ public:
         adjacentEdgesRelationEditor.adjustPlain(polygonDrawer);
         createCircularSectors(render);
         window.clear();
-
+    
         render.draw();
         slider.draw(window);
 
@@ -206,13 +219,8 @@ public:
     {
         if (currentValue == value1)
             currentValue = value2;
-        else if (currentValue == value2)
-            currentValue = value1;
         else
-        {
-            cout << "UNDEFINED BEHAVIOUR DEAR USER" << endl;
-            exit(1);
-        }
+            currentValue = value1;
     }
 
     template<typename T> 

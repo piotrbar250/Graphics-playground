@@ -82,7 +82,7 @@ bool Point::pointInCircle(const Point &p)
 bool Point::pointOnLine(const Line &l) const
 {
     float dis = l.dis(*this);
-    cout << endl << "dystans " << dis << " " << endl;
+    // cout << endl << "dystans " << dis << " " << endl;
     if (dis >= eps)
         return false;
     if (min(l.segment.b.x, l.segment.e.x) > x + eps or x - eps > max(l.segment.b.x, l.segment.e.x))
@@ -103,18 +103,3 @@ void Point::drawCircle()
     circle.setPosition(Vector2f(ctd(*this).x - radius, ctd(*this).y - radius));
     window.draw(circle);
 }
-
-// class Segment
-// {
-// public:
-//     Point b, e;
-
-//     Segment(const Point &b, const Point &e) : b(b.x, b.y), e(e.x, e.y)
-//     {
-//     }
-
-//     bool operator==(const Segment &p)
-//     {
-//         return b == p.b and e == p.e;
-//     }
-// };

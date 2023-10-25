@@ -1,43 +1,23 @@
+Class Polygon
+{
+public:
+    Vector<Segment> segments;
+    Vector<Vertex> vertexes;
+}
 
-enum Mode {
-    DRAWING,
-    EDITING,
-    VERTEX_REMOVING,
-    VERTEX_INSERTING,
-    POLYGON_MOVING,
-    TESTING,
-    SLIDER
-};
+class Point
+{
+public:
+    float x, float y;
+}
 
-enum Algorithm{
-    LIBRARY,
-    NAIVE,
-    BRESENHAM
-};
+class Segment
+{
+    public:
+    Point b, e;
+}
 
+Write a function that saves curent polygons. 
+It takes vector<Polygon*> polygons;
 
-extern Mode currentMode; 
-extern Algorithm currentAlgorithm;
-
-    template <typename T>
-    void swapModes(T mode1, T mode2)
-    {
-        if(T == "Mode")
-        {
-            set currentMode
-        }
-        else if(T == "Algorithm")
-        {
-            set currentAlgorithm
-        }
-        if (currentMode == mode1)
-            currentMode = mode2;
-        else if (currentMode == mode2)
-            currentMode = mode1;
-        else
-        {
-            cout << "UNDEFINED BEHAVIOUR DEAR USER" << endl;
-            exit(1);
-        }
-    }
-
+Write also a function that loads polygons from a file

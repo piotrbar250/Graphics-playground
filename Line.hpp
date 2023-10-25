@@ -24,14 +24,5 @@ public:
     void draw() const;
     float dis(const Point& p) const;
     Line parallelLine(float offset);
+    bool above(const Point& p) const;
 };
-
-
-/*
-        A = p1.y - p2.y;
-        B = p2.x - p1.x;
-        C = p1.x * (p2.y - p1.y) + (p1.x - p2.x) * p1.y; 
-        isVertical = B == 0;
-
-        verticalVector = Point(A, B).normalised();
-*/
