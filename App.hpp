@@ -1,6 +1,8 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cmath>
+#include <cstdlib>
 #include "global.hpp"
 #include "Point.hpp"
 #include "Line.hpp"
@@ -26,38 +28,65 @@ using namespace sf;
 RenderWindow window;
 Mode currentMode;
 Algorithm currentAlgorithm;
-float offsetThickness = 1;
+float offsetThickness;
 
-
-int main()
+class App
 {
-    window.create(sf::VideoMode(1152, 720), "Polygon editor");
-    window.display();
+public:
+    bool displayRelationMenu;
+    bool polygonStarted;
 
-    currentMode = DRAWING;
-    currentAlgorithm = LIBRARY;
     Render render;
 
-    PolygonDrawer polygonDrawer(render);
-    PolygonEditor *polygonEditor = new PolygonEditor(render);
+    PolygonDrawer polygonDrawer;
+    PolygonEditor *polygonEditor;
     PolygonVertexRemovingEditor *polygonVertexRemovingEditor;
     PolygonVertexInsertingEditor *polygonVertexInsertingEditor;
     PolygonMovingEditor *polygonMovingEditor;
 
-    ButtonDrawer buttonDrawer(render);
+    ButtonDrawer buttonDrawer;
 
-    VerticalRelationEditor verticalRelationEditor(render);
-    HorizontalRelationEditor horizontalRelationEditor(render);
-    AdjacentEdgesRelationEditor adjacentEdgesRelationEditor(render);
+    VerticalRelationEditor verticalRelationEditor;
+    HorizontalRelationEditor horizontalRelationEditor;
+    AdjacentEdgesRelationEditor adjacentEdgesRelationEditor;
 
     Slider slider;
 
-    bool displayRelationMenu = false;
+    App() : polygonDrawer(render), buttonDrawer(render), verticalRelationEditor(render),
+            horizontalRelationEditor(render), adjacentEdgesRelationEditor(render)
+    {
+        offsetThickness = 1;
+        displayRelationMenu = polygonStarted = false;
 
-    bool polygonStarted = false;
+        polygonEditor = new PolygonEditor(render);
+        polygonVertexRemovingEditor = nullptr;
+        polygonVertexInsertingEditor = nullptr;
+        polygonMovingEditor = nullptr;
+    }
 
-    int i = 0;
-    while (window.isOpen())
+    void run()
+    {
+        setup();
+        loop();
+    }
+
+    void setup()
+    {
+        window.create(sf::VideoMode(1152, 720), "Polygon editor");
+        window.display();
+    }
+
+    void loop()
+    {
+        while (window.isOpen())
+        {
+            handleAllEvents();
+            handleCurrentModeLogic();
+            renderFrame();
+        }
+    }
+
+    void handleAllEvents()
     {
         Event event;
 
@@ -92,39 +121,15 @@ int main()
             }
             if (event.type == Event::KeyPressed and event.key.code == Keyboard::X)
             {
-                if (currentMode == DRAWING)
-                    currentMode = TESTING;
-                else if (currentMode == TESTING)
-                    currentMode = DRAWING;
-                else
-                {
-                    cout << "UNDEFINED BEHAVIOUR" << endl;
-                    return 0;
-                }
+                swapModes(DRAWING, TESTING);
             }
             if (event.type == Event::KeyPressed and event.key.code == Keyboard::S)
             {
-                if (currentMode == DRAWING)
-                    currentMode = SLIDER;
-                else if (currentMode == SLIDER)
-                    currentMode = DRAWING;
-                else
-                {
-                    cout << "UNDEFINED BEHAVIOUR" << endl;
-                    return 0;
-                }
+                swapModes(DRAWING, SLIDER);
             }
             if (event.type == Event::KeyPressed and event.key.code == Keyboard::A)
             {
-                if (currentAlgorithm == LIBRARY)
-                    currentAlgorithm = BRESENHAM;
-                else if (currentAlgorithm == BRESENHAM)
-                    currentAlgorithm = LIBRARY;
-                else
-                {
-                    cout << "UNDEFINED BEHAVIOUR" << endl;
-                    return 0;
-                }
+                swapModes(LIBRARY, BRESENHAM);
             }
 
             slider.handleEvent(event);
@@ -158,6 +163,10 @@ int main()
                 }
             }
         }
+    }
+
+    void handleCurrentModeLogic()
+    {
 
         if (currentMode == DRAWING)
         {
@@ -176,7 +185,10 @@ int main()
         {
             buttonDrawer.displayRelationMenu();
         }
+    }
 
+    void renderFrame()
+    {
         verticalRelationEditor.adjustPlain(polygonDrawer);
         horizontalRelationEditor.adjustPlain(polygonDrawer);
         adjacentEdgesRelationEditor.adjustPlain(polygonDrawer);
@@ -188,4 +200,31 @@ int main()
 
         window.display();
     }
-}
+    
+    template <typename T>
+    void swapValues(T& currentValue, T value1, T value2)
+    {
+        if (currentValue == value1)
+            currentValue = value2;
+        else if (currentValue == value2)
+            currentValue = value1;
+        else
+        {
+            cout << "UNDEFINED BEHAVIOUR DEAR USER" << endl;
+            exit(1);
+        }
+    }
+
+    template<typename T> 
+    void swapModes(T value1, T value2)
+    {
+        if constexpr (is_same_v<T, Mode>)
+        {
+            swapValues(currentMode, value1, value2);
+        }
+        else if constexpr (is_same_v<T, Algorithm>)
+        {
+            swapValues(currentAlgorithm, value1, value2);
+        }
+    }
+};

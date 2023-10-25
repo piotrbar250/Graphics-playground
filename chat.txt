@@ -1,14 +1,43 @@
-We have:
-class Point{
-public:
-    float x, y;
+
+enum Mode {
+    DRAWING,
+    EDITING,
+    VERTEX_REMOVING,
+    VERTEX_INSERTING,
+    POLYGON_MOVING,
+    TESTING,
+    SLIDER
 };
 
-class Segment{
-public:
-    Point b, e;
-    Segment(Point b, Point e) : b(b), e(e) {}
-}
+enum Algorithm{
+    LIBRARY,
+    NAIVE,
+    BRESENHAM
+};
 
-We have two adjacent segments: segment1 and segment2 that segment1.e == segment2.B
-Calculate the angle from segment1 to segment2
+
+extern Mode currentMode; 
+extern Algorithm currentAlgorithm;
+
+    template <typename T>
+    void swapModes(T mode1, T mode2)
+    {
+        if(T == "Mode")
+        {
+            set currentMode
+        }
+        else if(T == "Algorithm")
+        {
+            set currentAlgorithm
+        }
+        if (currentMode == mode1)
+            currentMode = mode2;
+        else if (currentMode == mode2)
+            currentMode = mode1;
+        else
+        {
+            cout << "UNDEFINED BEHAVIOUR DEAR USER" << endl;
+            exit(1);
+        }
+    }
+
