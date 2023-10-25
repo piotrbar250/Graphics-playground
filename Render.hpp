@@ -9,6 +9,7 @@
 #include "Button.hpp"
 #include "BresenhamDrawingLineAlgorithm.hpp"
 #include "NaiveDrawingLineAlgorithm.hpp"
+#include "Slider.hpp"
 using namespace std;
 using namespace sf;
 
@@ -24,6 +25,9 @@ public:
 
     vector<VertexArray> sectors;
 
+    vector<RectangleShape> offsetRecatngles;
+    vector<RectangleShape> segmentRectangles;
+
     Render() : polygons(vector<Polygon*>()) {}
 
     void drawPoint(const Point& p)
@@ -33,7 +37,7 @@ public:
         window.draw(vA, 1, Points);
     }
 
-    void drawSegment(const Segment& seg)
+    void prepareSegments(const Segment& seg)
     {
         if(currentAlgorithm == BRESENHAM)
         {
@@ -57,14 +61,16 @@ public:
 
         rect.setFillColor(Color::Green);
 
-        RectangleShape rect2(Vector2f(len, thickness*5));
+        RectangleShape rect2(Vector2f(len, offsetThickness));
         rect2.setPosition(Vector2f(dtc(seg.b).x, dtc(seg.b).y));
         rect2.rotate(angle_deg);
 
         rect2.setFillColor(Color::White);
 
-        window.draw(rect2);
-        window.draw(rect);
+        segmentRectangles.push_back(rect);
+        offsetRecatngles.push_back(rect2);
+
+        // window.draw(rect);
     }
     
     void drawCircle(const Point& p)
@@ -87,7 +93,6 @@ public:
 
     void draw()
     {
-
         for(auto& sector: sectors)
             window.draw(sector);
 
@@ -95,8 +100,19 @@ public:
         for(auto& polygon: polygons)
         {
             for(auto& seg: polygon->segments)
-            drawSegment(seg);
+                prepareSegments(seg);
+        }
 
+        for(RectangleShape& rect: offsetRecatngles)
+            window.draw(rect);
+        offsetRecatngles.clear();
+
+        for(RectangleShape& rect: segmentRectangles)
+            window.draw(rect);
+        segmentRectangles.clear();
+
+        for(auto& polygon: polygons)
+        {
             for(auto& p: polygon->vertexes)
             drawCircle(p);
         }
@@ -106,17 +122,7 @@ public:
             button.draw();
         }
         buttons.clear();
-        
-        // for(auto& p: tmpVertexes)
-        //     drawCircle(p);
-        // for(auto& l: lines)
-        // {
-        //     drawLine(l);
-        // }
-
-        for(auto& s: tmpSegments)
-            drawSegment(s);
-            
+    
     }
 
     void addPolygon(Polygon* polygon)

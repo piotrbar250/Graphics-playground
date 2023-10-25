@@ -84,7 +84,7 @@ sf::VertexArray calculateCircularSector(float radius, float startAngle, float ar
 
 VertexArray createCircularSector(Segment segment1, Segment segment2, float local_thickness)
 {
-    local_thickness = thickness*5;
+    local_thickness = offsetThickness;
 
     Point A = segment1.b;
     Point B = segment1.e;

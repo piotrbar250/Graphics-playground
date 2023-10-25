@@ -10,7 +10,8 @@ enum Mode {
     VERTEX_REMOVING,
     VERTEX_INSERTING,
     POLYGON_MOVING,
-    TESTING
+    TESTING,
+    SLIDER
 };
 
 enum Algorithm{
@@ -23,7 +24,8 @@ enum Algorithm{
 // extern int M = 1152, N = 720; // const ?? 
 const int M = 1152, N = 720;
 const float radius = 10;
-const float thickness = 6; // 6;
+const float thickness = 6;
+extern float offsetThickness; // 6;
 const float eps = thickness/2.0f;
 
 const Color relationsButtonON = Color::Cyan;
